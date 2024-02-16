@@ -1,0 +1,142 @@
+/* CSS Document */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+
+body {
+    font-family: Google Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight:300;
+    font-size:18px;
+    margin:0px;
+    padding:0px;
+}
+
+p {
+    font-size: 14pt;
+}
+
+.anchor {
+    scroll-margin-top: 77px;
+}
+
+
+a:link,a:visited
+{
+    color: #1367a7;
+    text-decoration: none;
+}
+a:hover {
+    color: #208799;
+}
+
+td.dl-link {
+    height: 160px;
+    text-align: center;
+    font-size: 22px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+/* 
+pre {
+    position: relative;
+  }
+  
+  pre {
+    display: block;
+    padding: 20px;
+    background: #f2f2f2;
+    color: #555755;
+  } */
+
+span.command-copy {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: .6;
+    font-size: 20px;
+    color: #555755;
+  }
+  
+span.command-copy:hover {
+    cursor: pointer;
+  }
+
+
+/* buttons */
+
+
+#btn-back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+  }
+ 
+.btn-outline-secondary, .btn-outline-primary {
+    border-radius: 4rem !important;
+}
+
+ .smallpad.table{
+    width: unset !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+td,th {
+    border: none !important;
+}
+
+.smallpad.table>:not(caption)>*>* {
+    padding: 1 !important;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: 0px !important;
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+
+
+audio {
+    width:270px;
+    height: 43px;
+}
+
+.shortaudio{
+    width:239px;
+}
+
+.shorteraudio{
+    width:200px;
+}
+  
+  
+pre {
+    position: relative;
+    display: block;
+    padding: 20px;
+    background: #f2f2f2;
+    color: #555755;
+    padding: 1rem 1rem 1rem 5rem;
+    border-radius: 20px !important;
+    min-width: 100px;
+}
+
+.layered-paper-big { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+    box-shadow:
+    0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
+    5px 5px 0 0px #fff, /* The second layer */
+    5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
+    10px 10px 0 0px #fff, /* The third layer */
+    10px 10px 1px 1px rgba(0,0,0,0.35), /* The third layer shadow */
+    15px 15px 0 0px #fff, /* The fourth layer */
+    15px 15px 1px 1px rgba(0,0,0,0.35), /* The fourth layer shadow */
+    20px 20px 0 0px #fff, /* The fifth layer */
+    20px 20px 1px 1px rgba(0,0,0,0.35), /* The fifth layer shadow */
+    25px 25px 0 0px #fff, /* The fifth layer */
+    25px 25px 1px 1px rgba(0,0,0,0.35); /* The fifth layer shadow */
+    margin-left: 10px;
+    margin-right: 45px;
+    margin-bottom: 30px;
+}

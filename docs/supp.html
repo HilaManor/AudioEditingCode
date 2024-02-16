@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+	<title>Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  	<link href="stylefile.css" rel="stylesheet" type="text/css">
+	<meta property="og:image" content="resources/teaser.png"/> 
+	<meta property="og:title" content="Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion" />
+	<meta property="og:description" content="Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/ad96f96272.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="functionality.js"></script>
+</head>
+
+<body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	
+	<!-- navigation bar on the top, nav bar stick to the top -->
+	<nav id="navbar_top" class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary" style="margin-bottom: 15px;">
+		<div class="container">
+				<a class="navbar-brand" href="index.html"><i class="fa fa-arrow-left"></i> Back to homepage</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main_nav">
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item"><a class="nav-link" href="#sup-skip-effect">Effect of T-skip</a></li>
+				<li class="nav-item"><a class="nav-link" href="#randv">Comp. to Random Vectors</a></li>
+			</ul>
+			</div> 
+		</div> 
+		</nav>
+	<!-- end nav bar -->
+
+	<div class="container-xl"> 
+		<!-- top button -->
+		<button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top">
+			<i class="fas fa-arrow-up"></i>
+		</button>
+		<!-- end top button -->
+
+		<!-- top - author names, affiliation and links -->
+		<center>
+			<h1 style="font-size:2.25rem!important;">Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion</h1>
+		<h1 class="text-center" style="margin-top: 10px;">Supplemental Examples Page</h1>
+		<!-- end abstract and teaser image-->
+
+		<hr>
+            <h3 id="sup-skip-effect" class="anchor">
+                <button type="button" id="supSkipEffectSamplesBtn" onclick="toggleCollapseArrow('supSkipEffectSamplesBtn')" class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#supSkipEffectSamples" aria-expanded="true" aria-controls="supSkipEffectSamples"><i class="fas fa-chevron-down"></i></button>
+                &nbsp; 1.1.2. The Effect of Skip Used</h3>
+            <center>
+                <div class="container show" id="supSkipEffectSamples">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr class="text-center">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Source Prompt</th>
+                                    <th scope="col">Target Prompt</th>
+                                    <th scope="col">Original Audio</th>
+                                    <th scope="col">Skip=90</th>
+                                    <th scope="col">Skip=100</th>
+                                    <th scope="col">Skip=110</th>
+                                    <th scope="col">Skip=120</th>
+                                    <th scope="col">Skip=130</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>A recording of a happy upbeat song in a Latin jazz style.</td>
+                                    <td>A recording of a happy upbeat song in a retro arcade game soundtrack style.</td>
+                                    <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBLatinJazz.mp3" type="audio/mp4"></audio></td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_100.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_110.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_120.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_90.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_130.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td class="text-center">&mdash;</td>
+                                    <td>A recording of a funky jazz song.</td>
+                                    <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBeethoven.mp3" type="audio/mp4"></audio></td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_90.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_120.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_110.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_100.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_130.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Trumpets playing alongside a piano, bass and drums in an upbeat old-timey cool jazz song.</td>
+                                    <td>A banjo playing alongside a piano, bass and drums in an upbeat old-timey cool country song.</td>
+                                    <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBModalJazz.mp3" type="audio/mp4"></audio></td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_100.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_110.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_120.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_90.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_130.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+                </div>
+			</center>
+
+        <hr>
+		<h1 id="randv" style="margin-top: 65px;font-size:2.2rem!important;" class="anchor" >
+            <button type="button" id="randVComparisonsSamplesBtn" onclick="toggleCollapseArrow('randVComparisonsSamplesBtn')" 
+            class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#randVComparisonsSamples" aria-expanded="true" 
+            aria-controls="randVComparisonsSamples"><i class="fas fa-chevron-down"></i></button>
+            &nbsp; 3. Comparison of Unsupervised Editing Directions With Random Directions</h1>
+            <center>
+                <div class="container show" id="randVComparisonsSamples">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr class="text-center">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Inversion Prompt</th>
+                                    <th scope="col" colspan="3" style="border-right-style:inherit!important;border-right-width:0.1rem!important;border-right-color:inherit!important;border-left-style:inherit!important;border-left-width:0.1rem!important;border-left-color:inherit!important;">Edited Audios -&gamma;PC</th>
+                                    <th scope="col">Original Audio</th>
+                                    <th scope="col" colspan="3" style="border-right-style:inherit!important;border-right-width:0.1rem!important;border-right-color:inherit!important;border-left-style:inherit!important;border-left-width:0.1rem!important;border-left-color:inherit!important;">Edited Audios +&gamma;PC</th>
+                                    <th scope="col">PC Interpretation</th>
+                                    <th scope="col">Edit Parameters</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row" rowspan="2">1</th>
+                                    <td>Random</td>
+                                    <td>A high quality recording of a man singing with a rock band accompaniment.</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a-12.mp3" type="audio/mp4"></audio><br>&gamma; = -12</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a-8.mp3" type="audio/mp4"></audio><br>&gamma; = -8</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a-2.mp3" type="audio/mp4"></audio><br>&gamma; = -2</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBHendrix_8secs.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a2.mp3" type="audio/mp4"></audio><br>&gamma; = 2</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a8.mp3" type="audio/mp4"></audio><br>&gamma; = 8</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_RAND_a12.mp3" type="audio/mp4"></audio><br>&gamma; = 12</td>
+                                    <td></td>
+                                    <td class="text-center">t'&isin;[200, -1]<br>Specific t=80 used<br>PC #1</td>
+                                </tr>
+                                <tr>
+                                    <td>Ours</td>
+                                    <td>A high quality recording of a man singing with a rock band accompaniment.</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a-3.mp3" type="audio/mp4"></audio><br>&gamma; = -3</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a-2.mp3" type="audio/mp4"></audio><br>&gamma; = -2</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a-1.mp3" type="audio/mp4"></audio><br>&gamma; = -1</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBHendrix_8secs.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a1.mp3" type="audio/mp4"></audio><br>&gamma; = 1</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a2.mp3" type="audio/mp4"></audio><br>&gamma; = 2</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBHendrix_ours_200--1_spts80_pc1_a3.mp3" type="audio/mp4"></audio><br>&gamma; = 3</td>
+                                    <td>Drum-beat style</td>
+                                    <td class="text-center">t'&isin;[200, -1]<br>Specific t=80 used<br>PC #1</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" rowspan="2">3</th>
+                                    <td>Random</td>
+                                    <td class="text-center">&mdash;</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a-240.mp3" type="audio/mp4"></audio><br>&gamma; = -240</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a-120.mp3" type="audio/mp4"></audio><br>&gamma; = -120</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a-40.mp3" type="audio/mp4"></audio><br>&gamma; = -40</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/ManSpeakingBGNoise.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a40.mp3" type="audio/mp4"></audio><br>&gamma; = 40</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a120.mp3" type="audio/mp4"></audio><br>&gamma; = 120</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_RAND_a240.mp3" type="audio/mp4"></audio><br>&gamma; = 240</td>
+                                    <td></td>
+                                    <td class="text-center">t'&isin;[115, 95]<br><br>PC #1</td>
+                                </tr>
+                                <tr>
+                                    <td>Ours</td>
+                                    <td class="text-center">&mdash;</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a-60.mp3" type="audio/mp4"></audio><br>&gamma; = -60</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a-40.mp3" type="audio/mp4"></audio><br>&gamma; = -40</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a-20.mp3" type="audio/mp4"></audio><br>&gamma; = -20</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/ManSpeakingBGNoise.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a20.mp3" type="audio/mp4"></audio><br>&gamma; = 20</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a40.mp3" type="audio/mp4"></audio><br>&gamma; = 40</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/ManSpeakingBGNoise_ours_115-95_pc1_a60.mp3" type="audio/mp4"></audio><br>&gamma; = 60</td>
+                                    <td>Isolate Woman/Man</td>
+                                    <td class="text-center">t'&isin;[115, 95]<br><br>PC #1</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" rowspan="2">5</th>
+                                    <td>Random</td>
+                                    <td>A recording of an old timey rock song from the sixties.</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a-12.mp3" type="audio/mp4"></audio><br>&gamma; = -12</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a-8.mp3" type="audio/mp4"></audio><br>&gamma; = -8</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a-2.mp3" type="audio/mp4"></audio><br>&gamma; = -2</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBRock_8secs.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a2.mp3" type="audio/mp4"></audio><br>&gamma; = 2</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a8.mp3" type="audio/mp4"></audio><br>&gamma; = 8</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_RAND_a12.mp3" type="audio/mp4"></audio><br>&gamma; = 12</td>
+                                    <td></td>
+                                    <td class="text-center">t'&isin;[200, -1]<br>Specific t=65 used<br>PCs 1+2+3</td>
+                                </tr>
+                                <tr>
+                                    <td>Ours</td>
+                                    <td>A recording of an old timey rock song from the sixties.</td>
+                                   <td class="text-center"  style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;" ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a-2.mp3" type="audio/mp4"></audio><br>&gamma; = -2</td>
+                                   <td class="text-center"   ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a-1.mp3" type="audio/mp4"></audio><br>&gamma; = -1</td>
+                                   <td class="text-center" style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;"  ><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a-0.5.mp3" type="audio/mp4"></audio><br>&gamma; = -0.5</td>
+                                    <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBRock_8secs.mp3" type="audio/mp4"></audio></td>
+                                   <td class="text-center" style="border-left-style:inherit !important; border-left-width:0.1rem!important;border-left-color:inherit!important;"  "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a0.5.mp3" type="audio/mp4"></audio><br>&gamma; = 0.5</td>
+                                   <td class="text-center"><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a1.mp3" type="audio/mp4"></audio><br>&gamma; = 1</td>
+                                   <td class="text-center"  style="border-right-style:inherit !important; border-right-width:0.1rem!important;border-right-color:inherit!important;" "><audio class="shorteraudio" controls><source src="./resources/audio/unsup_samples/MDDBRock_ours_200--1_spts65_pcs_a2.mp3" type="audio/mp4"></audio><br>&gamma; = 2</td>
+                                    <td>Guitar/Singer emphasis</td>
+                                    <td class="text-center">t'&isin;[200, -1]<br>Specific t=65 used<br>PCs 1+2+3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+
+
+                </div>
+			</center>
+		<br>
+
+</div>
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+</body>
+</html>
+
