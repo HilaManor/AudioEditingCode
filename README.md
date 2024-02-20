@@ -10,6 +10,8 @@
 <!-- omit in toc -->
 # Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion
 
+###  [Project page](https://HilaManor.github.io/AudioEditing) | [Arxiv](https://arxiv.org/abs/2402.10009)
+
 This repository contains the official code release for ***Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion***.
 
 <!-- omit in toc -->
