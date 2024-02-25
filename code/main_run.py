@@ -6,7 +6,6 @@ import time
 import torch
 import torchaudio
 import wandb
-from diffusers import DDIMScheduler
 from torch import inference_mode
 
 from ddm_inversion.inversion_utils import inversion_forward_process, inversion_reverse_process
@@ -27,10 +26,12 @@ if __name__ == "__main__":
                                                          'declare-lab/tango-full-ft-audio-music-caps',
                                                          'declare-lab/tango-full-ft-audiocaps'],
                         default="cvssp/audioldm-s-full-v2", help='Audio diffusion model to use')
-    
+
     parser.add_argument("--init_aud", type=str, required=True, help='Audio to invert and extract PCs from')
-    parser.add_argument("--cfg_src", type=float, nargs='+', default=[3.5], help='Classifier-free guidance strength for forward process')
-    parser.add_argument("--cfg_tar", type=float, nargs='+', default=[15], help='Classifier-free guidance strength for reverse process')
+    parser.add_argument("--cfg_src", type=float, nargs='+', default=[3.5],
+                        help='Classifier-free guidance strength for forward process')
+    parser.add_argument("--cfg_tar", type=float, nargs='+', default=[15],
+                        help='Classifier-free guidance strength for reverse process')
     parser.add_argument("--num_diffusion_steps", type=int, default=200,
                         help="Number of diffusion steps. TANGO and AudioLDM2 are recommended to be used with 200 steps"
                              ", while AudioLDM is recommeneded to be used with 100 steps")
@@ -40,7 +41,7 @@ if __name__ == "__main__":
                         help="Prompt to accompany the forward process. Should describe the original audio.")
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help="Negative prompt to accompany the inversion and generation process")
-    parser.add_argument("--skip", type=int, nargs='+', default=[0],
+    parser.add_argument("--tstart", type=int, nargs='+', default=[0],
                         help="Diffusion timestep to start the reverse process from. Controls editing strength.")
     parser.add_argument("--results_path", type=str, default="results", help="path to dump results")
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     args.numerical_fix = True
     args.x_prev_mode = False
     args.test_rand_gen = False
-    
+
     set_reproducability(args.seed, extreme=False)
 
     wandb.login()
@@ -75,13 +76,13 @@ if __name__ == "__main__":
     cfg_scale_src = args.cfg_src
     cfg_scale_tar = args.cfg_tar
     eta = args.eta  # = 1
-    # skip_zs=[args.skip]
-    if len(args.skip) != len(args.target_prompt):
-        if len(args.skip) == 1:
-            args.skip *= len(args.target_prompt)
+    if len(args.tstart) != len(args.target_prompt):
+        if len(args.tstart) == 1:
+            args.tstart *= len(args.target_prompt)
         else:
-            raise ValueError("Skips amount and target prompt amount don't match.")
-    args.skip = torch.tensor(args.skip, dtype=torch.int)
+            raise ValueError("T-start amount and target prompt amount don't match.")
+    args.tstart = torch.tensor(args.tstart, dtype=torch.int)
+    skip = args.num_diffusion_steps - torch.tensor(args.tstart, dtype=torch.int)
 
     current_GMT = time.gmtime()
     time_stamp = calendar.timegm(current_GMT)
@@ -97,7 +98,7 @@ if __name__ == "__main__":
         if len(cfg_scale_src) > 1:
             raise ValueError("DDIM only supports one cfg_scale_src value")
         wT = ddim_inversion(ldm_stable, w0, args.source_prompt, cfg_scale_src[0],
-                            num_inference_steps=args.num_diffusion_steps, skip=args.skip[0])
+                            num_inference_steps=args.num_diffusion_steps, skip=skip[0])
     else:
         wt, zs, wts = inversion_forward_process(ldm_stable, w0, etas=eta,
                                                 prompts=args.source_prompt, cfg_scales=cfg_scale_src,
@@ -109,30 +110,30 @@ if __name__ == "__main__":
 
     # iterate over decoder prompts
     save_path = os.path.join(f'./{args.results_path}/',
-                                model_id.split('/')[1],
-                                os.path.basename(args.init_aud).split('.')[0],
-                                'src_' + "__".join([x.replace(" ", "_") for x in args.source_prompt]),
-                                'dec_' + "__".join([x.replace(" ", "_") for x in args.target_prompt]) +
-                                "__neg__" + "__".join([x.replace(" ", "_") for x in args.target_neg_prompt]))
+                             model_id.split('/')[1],
+                             os.path.basename(args.init_aud).split('.')[0],
+                             'src_' + "__".join([x.replace(" ", "_") for x in args.source_prompt]),
+                             'dec_' + "__".join([x.replace(" ", "_") for x in args.target_prompt]) +
+                             "__neg__" + "__".join([x.replace(" ", "_") for x in args.target_neg_prompt]))
     os.makedirs(save_path, exist_ok=True)
 
     if args.mode == "ours":
         # reverse process (via Zs and wT)
         w0, _ = inversion_reverse_process(ldm_stable,
-                                            xT=wts if not args.test_rand_gen else torch.randn_like(wts),
-                                            skips=args.num_diffusion_steps - args.skip,
-                                            fix_alpha=args.fix_alpha,
-                                            etas=eta, prompts=args.target_prompt,
-                                            neg_prompts=args.target_neg_prompt,
-                                            cfg_scales=cfg_scale_tar, prog_bar=True,
-                                            zs=zs[:int(args.num_diffusion_steps - min(args.skip))]
-                                            if not args.test_rand_gen else torch.randn_like(
-                                                zs[:int(args.num_diffusion_steps - min(args.skip))]),
-                                            #   zs=zs[skip:],
-                                            cutoff_points=args.cutoff_points)
+                                          xT=wts if not args.test_rand_gen else torch.randn_like(wts),
+                                          skips=args.num_diffusion_steps - skip,
+                                          fix_alpha=args.fix_alpha,
+                                          etas=eta, prompts=args.target_prompt,
+                                          neg_prompts=args.target_neg_prompt,
+                                          cfg_scales=cfg_scale_tar, prog_bar=True,
+                                          zs=zs[:int(args.num_diffusion_steps - min(skip))]
+                                          if not args.test_rand_gen else torch.randn_like(
+                                              zs[:int(args.num_diffusion_steps - min(skip))]),
+                                          #   zs=zs[skip:],
+                                          cutoff_points=args.cutoff_points)
     else:  # ddim
-        if args.skip != 0:
-            print("DDIM runs with skip=0, always.")
+        if skip != 0:
+            print("DDIM runs with tstart==num_diffusion_steps, always.")
         if len(cfg_scale_tar) > 1:
             raise ValueError("DDIM only supports one cfg_scale_tar value")
         if len(args.source_prompt) > 1:
@@ -140,9 +141,9 @@ if __name__ == "__main__":
         if len(args.target_prompt) > 1:
             raise ValueError("DDIM only supports one args.target_prompt value")
         w0 = text2image_ldm_stable(ldm_stable, args.target_prompt,
-                                    args.num_diffusion_steps, cfg_scale_tar[0],
-                                    wT,
-                                    skip=0)
+                                   args.num_diffusion_steps, cfg_scale_tar[0],
+                                   wT,
+                                   skip=0)
 
     # vae decode image
     with inference_mode():
@@ -160,7 +161,7 @@ if __name__ == "__main__":
     if args.mode == 'ours':
         image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
             f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
-            f'skip_{"-".join([str(x) for x in args.skip.numpy()])}_{time_stamp_name}'
+            f'skip_{"-".join([str(x) for x in skip.numpy()])}_{time_stamp_name}'
     else:
         image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
             f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \

@@ -37,13 +37,13 @@ Supported models are AudioLDM, TANGO, and AudioLDM2. For unsupervised editing, S
 ### Text-Based Editing
 
 ```bash
-CUDA_VISIBLE_DEVICES=<gpu_num> python main_run.py --cfg_tar <target_cfg_strength> --cfg_src <source_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --skip <edit from timestep> --model_id <model_name> --results_path <path to dump results>
+CUDA_VISIBLE_DEVICES=<gpu_num> python main_run.py --cfg_tar <target_cfg_strength> --cfg_src <source_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --tstart <edit from timestep> --model_id <model_name> --results_path <path to dump results>
 ```
 
 You can supply a source prompt that describes the original audio by using `--source_prompt`.  
 Use `python main_run.py --help` for all options.
 
-use `--mode ddim` to run DDIM inversion and editing (note that `--skip` must be `0`).
+use `--mode ddim` to run DDIM inversion and editing (note that `--tstart` must be equal to `num_diffusion_steps` (by default set to `200`)).
 
 ### Unsupervised Editing
 
@@ -75,7 +75,7 @@ To recreate the random vectors baseline, use `--rand_v`.  Image samples can be r
 SDEdit can be run similarly with:
 
 ```bash
-CUDA_VISIBLE_DEVICES=<gpu_num> python main_run_sdedit.py --cfg_tar <target_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --skip <edit from timestep> --model_id <model_name> --results_path <path to dump results>
+CUDA_VISIBLE_DEVICES=<gpu_num> python main_run_sdedit.py --cfg_tar <target_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --tstart <edit from timestep> --model_id <model_name> --results_path <path to dump results>
 ```
 
 Use `python main_run_sdedit.py --help` for all options.

@@ -898,7 +898,7 @@ class StableDiffWrapper(PipelineWrapper):
             return unet_out
 
         return unet_out, None, None
-        
+
 
 def load_model(model_id, device, num_diffusion_steps, double_precision=False):
     if 'tango' in model_id:

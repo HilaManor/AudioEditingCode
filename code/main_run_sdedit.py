@@ -36,7 +36,7 @@ if __name__ == "__main__":
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help="Negative prompt to accompany the inversion and generation process")
     parser.add_argument('--results_path', default='sdedit', help='path to dump results', help="path to dump results")
-    parser.add_argument("--skip", type=int, default=0,
+    parser.add_argument("--tstart", type=int, default=0,
                         help="Diffusion timestep to start the reverse process from. Controls editing strength.")
 
     parser.add_argument('--wandb_name', type=str, default=None)
@@ -47,7 +47,9 @@ if __name__ == "__main__":
     args.eta = 1.
     set_reproducability(args.seed, extreme=False)
 
-    image_name_png = f's{args.seed}_skip{args.skip}_cfg{args.cfg_tar}'
+    skip = args.num_diffusion_steps - args.tstart
+
+    image_name_png = f's{args.seed}_skip{skip}_cfg{args.cfg_tar}'
     args.image_name_png = image_name_png
 
     wandb.login()
@@ -84,8 +86,8 @@ if __name__ == "__main__":
         lat = lat * ldm_stable.model.scheduler.init_noise_sigma
         latents.append(lat)
 
-    timesteps = timesteps[args.skip:]
-    latents = latents[args.skip + 1:]
+    timesteps = timesteps[skip:]
+    latents = latents[skip + 1:]
 
     noise = torch.randn_like(w0, device=device)
     xt = ldm_stable.model.scheduler.add_noise(w0, noise, timesteps[:1].unsqueeze(0))
