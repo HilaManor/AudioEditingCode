@@ -6,11 +6,12 @@
 [![torchaudio](https://img.shields.io/badge/torchaudio-2.0.1-green?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![diffusers](https://img.shields.io/badge/diffusers-0.22.0-green)](https://github.com/huggingface/diffusers/)
 [![transformers](https://img.shields.io/badge/transformers-1.35.0-green)](https://github.com/huggingface/transformers/)
+[![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
 
 <!-- omit in toc -->
 # Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion
 
-###  [Project page](https://HilaManor.github.io/AudioEditing) | [Arxiv](https://arxiv.org/abs/2402.10009)
+###  [Project page](https://HilaManor.github.io/AudioEditing) | [Arxiv](https://arxiv.org/abs/2402.10009) | [Text-Based Space](https://huggingface.co/spaces/hilamanor/audioEditing)
 
 This repository contains the official code release for ***Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion***.
 
@@ -98,3 +99,12 @@ If you use this code for your research, please cite our paper:
 # Acknowledgements
 
 Parts of this code are heavily based on [DDPM Inversion](https://github.com/inbarhub/DDPM_inversion) and on [Gaussian Denoising Posterior](https://github.com/HilaManor/GaussianDenoisingPosterior).
+
+This work is licensed under a
+[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
+
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
+
+[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
+[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
+[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
