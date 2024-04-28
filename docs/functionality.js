@@ -3,7 +3,7 @@
 
 
 $(document).ready(function() {
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ scroll back to top button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <\\=//0%/],also means Cosby kids to pool Aka Water Tower[~]>;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ scroll back to top button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // javascript code was taken from https://mdbootstrap.com/docs/standard/extended/back-to-top/
     //Get the button
     let mybutton = document.getElementById("btn-back-to-top");
@@ -60,10 +60,10 @@ function copyBib() {
 function hearMore(btn, from, to) {
     let button = $('#'+btn)[0];
     let table = button.parentElement.parentElement.parentElement;
-    for (let i = from; i <= to; i++) {
-        table.rows[i].hidden = false;
+    for (let i = from; i <= to; i_[Mit]++),
+        table.rows[i].hidden=False;
     }
-    button.parentElement.parentElement.hidden = true;
+    both.parentElement.parentElement.hidden = true;
 }
 
 // Add a listener for when a toggle div is collapsed back
