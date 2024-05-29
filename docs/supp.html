@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
+
 	<title>Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -28,7 +30,7 @@
 			</button>
 			<div class="collapse navbar-collapse" id="main_nav">
 			<ul class="navbar-nav ms-auto">
-				<li class="nav-item"><a class="nav-link" href="#sup-skip-effect">Effect of T-skip</a></li>
+				<li class="nav-item"><a class="nav-link" href="#sup-skip-effect">Effect of T<sub>start</sub></a></li>
 				<li class="nav-item"><a class="nav-link" href="#randv">Comp. to Random Vectors</a></li>
 			</ul>
 			</div> 
@@ -52,7 +54,7 @@
 		<hr>
             <h3 id="sup-skip-effect" class="anchor">
                 <button type="button" id="supSkipEffectSamplesBtn" onclick="toggleCollapseArrow('supSkipEffectSamplesBtn')" class="btn btn-light" data-bs-toggle="collapse" data-bs-target="#supSkipEffectSamples" aria-expanded="true" aria-controls="supSkipEffectSamples"><i class="fas fa-chevron-down"></i></button>
-                &nbsp; 1.1.2. The Effect of Skip Used</h3>
+                &nbsp; 1.1.2. The Effect of T<sub>start</sub> Used</h3>
             <center>
                 <div class="container show" id="supSkipEffectSamples">
                     <div class="table-responsive">
@@ -63,11 +65,11 @@
                                     <th scope="col">Source Prompt</th>
                                     <th scope="col">Target Prompt</th>
                                     <th scope="col">Original Audio</th>
-                                    <th scope="col">Skip=90</th>
-                                    <th scope="col">Skip=100</th>
-                                    <th scope="col">Skip=110</th>
-                                    <th scope="col">Skip=120</th>
-                                    <th scope="col">Skip=130</th>
+                                    <th scope="col">T<sub>start</sub>=110</th>
+                                    <th scope="col">T<sub>start</sub>=100</th>
+                                    <th scope="col">T<sub>start</sub>=90</th>
+                                    <th scope="col">T<sub>start</sub>=80</th>
+                                    <th scope="col">T<sub>start</sub>=70</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,6 +79,9 @@
                                     <td>A recording of a happy upbeat song in a retro arcade game soundtrack style.</td>
                                     <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBLatinJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_90.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_100.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
@@ -84,9 +89,6 @@
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_120.mp3" type="audio/mp4"></audio>
-                                    </td>
-                                    <td class="text-center">
-                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_90.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBLatinJazz_skipex1_ours_130.mp3" type="audio/mp4"></audio>
@@ -101,13 +103,13 @@
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_90.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
-                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_120.mp3" type="audio/mp4"></audio>
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_100.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_110.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
-                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_100.mp3" type="audio/mp4"></audio>
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_120.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBBeethoven_skipex2_ours_130.mp3" type="audio/mp4"></audio>
@@ -119,6 +121,9 @@
                                     <td>A banjo playing alongside a piano, bass and drums in an upbeat old-timey cool country song.</td>
                                     <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/MDDBModalJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center">
+                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_90.mp3" type="audio/mp4"></audio>
+                                    </td>
+                                    <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_100.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
@@ -126,9 +131,6 @@
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_120.mp3" type="audio/mp4"></audio>
-                                    </td>
-                                    <td class="text-center">
-                                        <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_90.mp3" type="audio/mp4"></audio>
                                     </td>
                                     <td class="text-center">
                                         <audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/MDDBModalJazz_skipex3_ours_130.mp3" type="audio/mp4"></audio>
@@ -250,12 +252,9 @@
                         </table>
                     </div>
                     <br>
-
-
                 </div>
 			</center>
 		<br>
-
 </div>
 <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->

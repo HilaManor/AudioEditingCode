@@ -41,7 +41,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args.eta = 1.
     set_reproducability(args.seed, extreme=False)
-
     skip = args.num_diffusion_steps - args.tstart
 
     image_name_png = f's{args.seed}_skip{skip}_cfg{args.cfg_tar}'

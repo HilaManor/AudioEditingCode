@@ -7,11 +7,12 @@
 [![diffusers](https://img.shields.io/badge/diffusers-0.22.0-green)](https://github.com/huggingface/diffusers/)
 [![transformers](https://img.shields.io/badge/transformers-1.35.0-green)](https://github.com/huggingface/transformers/)
 [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+[![CC BY 4.0][cc-by-shield]][cc-by]
 
 <!-- omit in toc -->
-# Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion
+# Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion [ICML 2024]
 
-###  [Project page](https://HilaManor.github.io/AudioEditing) | [Arxiv](https://arxiv.org/abs/2402.10009) | [Text-Based Space](https://huggingface.co/spaces/hilamanor/audioEditing)
+### [Project page](https://HilaManor.github.io/AudioEditing) | [Arxiv](https://arxiv.org/abs/2402.10009) | [Text-Based Space](https://huggingface.co/spaces/hilamanor/audioEditing)
 
 This repository contains the official code release for ***Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion***.
 
@@ -23,7 +24,10 @@ This repository contains the official code release for ***Zero-Shot Unsupervised
   - [Text-Based Editing](#text-based-editing)
   - [Unsupervised Editing](#unsupervised-editing)
   - [SDEdit](#sdedit)
+- [Evaluation](#evaluation)
+- [MedleyMDPrompts](#medleymdprompts)
 - [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
 
 ## Requirements
 
@@ -59,7 +63,7 @@ You can supply a source prompt that describes the original audio by using `--sou
 Then apply the PCs:
 
 ```bash
-CUDA_VISIBLE_DEVICES=<gpu_num> python main_pc_apply_drift.py --extraction_path <path to extracted .pt file> --drift_start <timestep to start apply> --drift_end <timestep to end apply> --amount <edit strength> --evs <ev nums to apply> 
+CUDA_VISIBLE_DEVICES=<gpu_num> python main_pc_apply_drift.py --extraction_path <path to extracted .pt file> --drift_start <timestep to start apply> --drift_end <timestep to end apply> --amount <edit strength> --evs <ev nums to apply>
 
 ```
 
@@ -83,28 +87,60 @@ Use `python main_run_sdedit.py --help` for all options.
 
 Image samples can be recreated using `images_run_sdedit.py`.
 
-# Citation
+## Evaluation
 
-If you use this code for your research, please cite our paper:
+We provide our code used to run LPAPS, CLAP and FAD based evaluations. The code is adapted from multiple repos:
+
+- FAD is from [microsoft/fadtk](https://github.com/microsoft/fadtk).
+- LPAPS is adapted from [richzhang/PerceptualSimilarity](https://github.com/richzhang/PerceptualSimilarity).
+- CLAP is adapted from [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft).
+
+We provide the full code (that works on our directory structure) as an example of use.
+
+## MedleyMDPrompts
+
+The `MedleyMDPrompts` dataset contains manually labeled prompts for the MusicDelta subset of the MedleyDB dataset [Bittner et al. 2014](https://www.researchgate.net/profile/Justin-Salamon/publication/265508421_MedleyDB_A_Multitrack_Dataset_for_Annotation-Intensive_MIR_Research/links/54106cc70cf2f2b29a4109ff/MedleyDB-A-Multitrack-Dataset-for-Annotation-Intensive-MIR-Research.pdf). The MusicDelta subset is comprised of 34 musical excerpts in varying styles and in lengths ranging from 20 seconds to 5 minutes.  
+This prompts dataset includes 3-4 source prompts for each signal, and 3-12 editing target prompts for each of the source prompts, totalling 107 source prompts and 696 target prompts.  
+In the `captions_targets.csv`, the column `can_be_used_without_source` refers to whether this target prompt was designed to complement a source prompt or not, and therefore should provide enough information to edit a signal on their own. This is just a guideline, you might find that for your application all target prompts are enough on their own.  
+The `source_caption_index` column indexes the (ordered) index (starting from 1) of the source prompt for the same signal this target prompt relates to. This data can be used together with `can_be_used_without_source`.
+
+## Citation
+
+If you use this code or the MedleyMDPrompts dataset for your research, please cite our paper:
 
 ```
 @article{manor2024zeroshot,
-    title={Zero-Shot Unsupervised and Text-Based Audio Editing Using {DDPM} Inversion}, 
+    title={Zero-Shot Unsupervised and Text-Based Audio Editing Using {DDPM} Inversion},
     author={Manor, Hila and Michaeli, Tomer},
     journal={arXiv preprint arXiv:2402.10009},
     year={2024},
 }
 ```
 
-# Acknowledgements
+## Acknowledgements
 
 Parts of this code are heavily based on [DDPM Inversion](https://github.com/inbarhub/DDPM_inversion) and on [Gaussian Denoising Posterior](https://github.com/HilaManor/GaussianDenoisingPosterior).
 
-This work is licensed under a
-[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
+AudioLDM2 is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa]. Therefore, using the weights of AudioLDM2 (the default) and code originating in the `code/audioldm` folder is under the same license (eg., `utils.py:load_audio` uses code from `code/audioldm`).  
+The rest of the code (inversion, PCs computation) is licensed under an MIT license.
 
 [![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
 
 [cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
 [cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
 [cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+
+The evaluation code adapts code from differently licensed repos:
+
+- FAD is from [microsoft/fadtk](https://github.com/microsoft/fadtk), under MIT License.
+- LPAPS is adapted from [richzhang/PerceptualSimilarity](https://github.com/richzhang/PerceptualSimilarity), under BSD-2-Clause License.
+- CLAP's weights are under CC0-1.0 License, from [LAION-AI/CLAP](https://github.com/LAION-AI/CLAP)
+- CLAP's processing code is adapted from [facebookresearch/audiocraft](https://github.com/facebookresearch/audiocraft), under MIT License.
+
+Our *MedleyMDPrompts* dataset is licensed under CC-BY-4.0 License.
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://licensebuttons.net/l/by/4.0/88x31.png
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg

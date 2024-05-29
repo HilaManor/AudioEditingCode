@@ -5,6 +5,7 @@ import os
 import time
 import torch
 import torchaudio
+import warnings
 import wandb
 from torch import inference_mode
 
@@ -61,20 +62,38 @@ if __name__ == "__main__":
     args.test_rand_gen = False
 
     set_reproducability(args.seed, extreme=False)
-
-    wandb.login()
-    wandb_run = wandb.init(project="AudInv", config={},
-                           name=args.wandb_name, group=args.wandb_group,
-                           mode='disabled' if args.wandb_disable else 'online',
-                           settings=wandb.Settings(_disable_stats=True))
-    wandb.config.update(args)
-
     device = f"cuda:{args.device_num}"
     torch.cuda.set_device(args.device_num)
 
     model_id = args.model_id
     cfg_scale_src = args.cfg_src
     cfg_scale_tar = args.cfg_tar
+
+    # same output
+    current_GMT = time.gmtime()
+    time_stamp_name = calendar.timegm(current_GMT)
+    if args.mode == 'ours':
+        image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
+            f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
+            f'skip_{int(args.num_diffusion_steps) - int(args.tstart[0])}_{time_stamp_name}'
+    else:
+        if args.tstart != args.num_diffusion_steps:
+            image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
+                f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
+                f'skip_{int(args.num_diffusion_steps) - int(args.tstart[0])}_{time_stamp_name}'
+        else:
+            image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
+                f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
+                f'{args.num_diffusion_steps}timesteps_{time_stamp_name}'
+
+    wandb.login(key='')
+    wandb_run = wandb.init(project="AudInv", entity='', config={},
+                           name=args.wandb_name if args.wandb_name is not None else image_name_png,
+                           group=args.wandb_group,
+                           mode='disabled' if args.wandb_disable else 'online',
+                           settings=wandb.Settings(_disable_stats=True))
+    wandb.config.update(args)
+
     eta = args.eta  # = 1
     if len(args.tstart) != len(args.target_prompt):
         if len(args.tstart) == 1:
@@ -82,10 +101,7 @@ if __name__ == "__main__":
         else:
             raise ValueError("T-start amount and target prompt amount don't match.")
     args.tstart = torch.tensor(args.tstart, dtype=torch.int)
-    skip = args.num_diffusion_steps - torch.tensor(args.tstart, dtype=torch.int)
-
-    current_GMT = time.gmtime()
-    time_stamp = calendar.timegm(current_GMT)
+    skip = args.num_diffusion_steps - args.tstart
 
     ldm_stable = load_model(model_id, device, args.num_diffusion_steps)
     x0 = load_audio(args.init_aud, ldm_stable.get_fn_STFT(), device=device)
@@ -133,7 +149,8 @@ if __name__ == "__main__":
                                           cutoff_points=args.cutoff_points)
     else:  # ddim
         if skip != 0:
-            print("DDIM runs with tstart==num_diffusion_steps, always.")
+            warnings.warn("Plain DDIM Inversion should be run with t_start == num_diffusion_steps. "
+                          "You are now running partial DDIM inversion.", RuntimeWarning)
         if len(cfg_scale_tar) > 1:
             raise ValueError("DDIM only supports one cfg_scale_tar value")
         if len(args.source_prompt) > 1:
@@ -143,7 +160,7 @@ if __name__ == "__main__":
         w0 = text2image_ldm_stable(ldm_stable, args.target_prompt,
                                    args.num_diffusion_steps, cfg_scale_tar[0],
                                    wT,
-                                   skip=0)
+                                   skip=skip)
 
     # vae decode image
     with inference_mode():
@@ -163,9 +180,14 @@ if __name__ == "__main__":
             f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
             f'skip_{"-".join([str(x) for x in skip.numpy()])}_{time_stamp_name}'
     else:
-        image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
-            f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
-            f'{args.num_diffusion_steps}timesteps_{time_stamp_name}'
+        if skip != 0:
+            image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
+                f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
+                f'skip_{"-".join([str(x) for x in skip.numpy()])}_{time_stamp_name}'
+        else:
+            image_name_png = f'cfg_e_{"-".join([str(x) for x in cfg_scale_src])}_' + \
+                f'cfg_d_{"-".join([str(x) for x in cfg_scale_tar])}_' + \
+                f'{args.num_diffusion_steps}timesteps_{time_stamp_name}'
 
     save_full_path_spec = os.path.join(save_path, image_name_png + ".png")
     save_full_path_wave = os.path.join(save_path, image_name_png + ".wav")

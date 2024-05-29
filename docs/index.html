@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
+
 	<title>Zero-Shot Unsupervised and Text-Based Audio Editing Using DDPM Inversion</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -28,8 +30,8 @@
 			</button>
 			<div class="collapse navbar-collapse" id="main_nav">
 			<ul class="navbar-nav ms-auto">
-				<li class="nav-item"><a class="nav-link" href="#supsamples">Text-based Editing Samples</a></li>
-				<li class="nav-item"><a class="nav-link" href="#unsupsamples">Unsup. Editing Samples</a></li>
+				<li class="nav-item"><a class="nav-link" href="#supsamples">Text-based Editing</a></li>
+				<li class="nav-item"><a class="nav-link" href="#unsupsamples">Unsup. Editing</a></li>
 				<li class="nav-item"><a class="nav-link" href="#supcomparisons">Text-Based Editing Comp.</a></li>
 				<li class="nav-item"><a class="nav-link" href="#unsupcomparisons">Unsup. Editing Comp.</a></li>
 			</ul>
@@ -70,8 +72,13 @@
                         </a>
                     </div>
                     <div class="col-md-auto">
-                        <a href="https://github.com/HilaManor/AudioInversion/" style="font-size:24px" class="btn btn-lg btn-outline-primary" role="button" target="_blank" rel="noopener noreferrer">
+                        <a href="https://github.com/HilaManor/AudioEditingCode/" style="font-size:24px" class="btn btn-lg btn-outline-primary" role="button" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-github" aria-hidden="true"></i> Code
+                        </a>
+                    </div>
+			<div class="col-md-auto">
+                        <a href="https://huggingface.co/spaces/hilamanor/audioEditing/" style="font-size:24px" class="btn btn-lg btn-outline-primary" role="button" target="_blank" rel="noopener noreferrer">
+                            🤗 Text-Based Space
                         </a>
                     </div>
                 </div>
@@ -121,7 +128,7 @@
                                     <th scope="col">Target Prompt</th>
                                     <th scope="col">Original Audio</th>
                                     <th scope="col">Edited Audio</th>
-                                    <th scope="col">Edit Skip</th>
+                                    <th scope="col">Edit T<sub>start</sub></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,7 +138,7 @@
                                     <td>A recording of a <b>tense classical</b> music score.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBFreeJazz.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/orchestra_MDDBFreeJazz_ours_90.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">90</td>
+                                    <td class="text-center align-middle">110</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
@@ -155,7 +162,7 @@
                                     <td><b>A banjo</b> playing alongside a piano, bass and drums in an upbeat old-timey cool <b>country</b> song.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBModalJazz.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/country_MDDBModalJazz_ours_110.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">110</td>
+                                    <td class="text-center align-middle">90</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">5</th>
@@ -163,7 +170,7 @@
                                     <td>A recording of a dark techno song.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBBeethoven.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/techno_MDDBBeethoven_ours_110.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">110</td>
+                                    <td class="text-center align-middle">90</td>
                                 </tr>
                                 <tr class="text-center align-middle">
                                     <td colspan="6" class="text-center align-middle">
@@ -177,7 +184,7 @@
                                     <td>A recording of a dramatic <b>heavy metal</b> piece.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBChineseDrama.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/metal_MDDBChineseDrama_ours_160.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">160</td>
+                                    <td class="text-center align-middle">40</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">7</th>
@@ -185,7 +192,7 @@
                                     <td>A recording of <b>Arabic music</b>.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBBritpop.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/arabic_MDDBBritpop_ours_90.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">90</td>
+                                    <td class="text-center align-middle">110</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">8</th>
@@ -193,7 +200,7 @@
                                     <td>A recording of a funky hip hop song.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBFunkJazz.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/hiphop_MDDBFunkJazz_ours_90.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">90</td>
+                                    <td class="text-center align-middle">110</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">9</th>
@@ -201,7 +208,7 @@
                                     <td>A high quality recording of <b>a piano</b> playing.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBBeethoven.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/instrument_MDDBBeethoven_ours_130.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">130</td>
+                                    <td class="text-center align-middle">70</td>
                                 </tr>
                                 
                                 <tr hidden>
@@ -218,7 +225,7 @@
                                     <td>A recording of a happy upbeat song in a <b>retro arcade game soundtrack</b> style.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBLatinJazz.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/arcade_MDDBLatinJazz_ours_110.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">110</td>
+                                    <td class="text-center align-middle">90</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">12</th>
@@ -226,7 +233,7 @@
                                     <td>A recording of an upbeat cool jazz song.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBPunk.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/jazz_MDDBPunk_ours_110.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">110</td>
+                                    <td class="text-center align-middle">90</td>
                                 </tr>
                                 <tr class="text-center align-middle" hidden>
                                     <td colspan="6" class="text-center align-middle">
@@ -240,7 +247,7 @@
                                     <td>A recording of an <b>techno</b> song.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBRockabilly.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/techno_MDDBRockabilly_ours_110.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">110</td>
+                                    <td class="text-center align-middle">90</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">14</th>
@@ -248,7 +255,7 @@
                                     <td>Chinese strings, flutes, and harps playing an <b>somber</b> piece.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBChineseChaoZhou.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/tone_MDDBChineseChaoZhou_ours_120.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">120</td>
+                                    <td class="text-center align-middle">80</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">15</th>
@@ -256,7 +263,7 @@
                                     <td>A recording of an upbeat arcade game soundtrack.</td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/orig/MDDBBebopJazz.mp3" type="audio/mp4"></audio></td>
                                     <td><audio preload="auto" controls><source src="./resources/audio/sup_samples/arcade_MDDBBebopJazz_ours_120.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center align-middle">120</td>
+                                    <td class="text-center align-middle">80</td>
                                 </tr>
                                 
                                 <!-- <tr class="text-center align-middle" hidden>
@@ -274,7 +281,7 @@
                                     <td>A high quality recording of a <b>dog barking</b>.</td>
                                     <td><audio controls><source src="./resources/audio/orig/CuteCat_10sec.mp3" type="audio/mp4"></audio></td>
                                     <td><audio controls><source src="./resources/audio/sup_samples/CuteCat_10sec_ours_50.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center">50</td>
+                                    <td class="text-center">150</td>
                                 </tr>
                                 <tr hidden>
                                     <th scope="row">17</th>
@@ -290,18 +297,35 @@
                                     <td>A <b>rooster crowing</b>.</td>
                                     <td><audio controls><source src="./resources/audio/orig/Shouting.mp3" type="audio/mp4"></audio></td>
                                     <td><audio controls><source src="./resources/audio/sup_samples/Shouting_ours_90.mp3" type="audio/mp4"></audio></td>
-                                    <td class="text-center">90</td>
+                                    <td class="text-center">110</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <br>
 
+		    <div class="row">
+    			<div>
+			    <div class="" id="headingOne">
+			        <h5 class="mb-0">
+				    <button class="btn btn-lg btn-warning collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#huggingface_demo" aria-expanded="false" aria-controls="huggingface_demo">🤗 Space Demo</button>
+			        </h5>
+			    </div>
+		
+		            <div id="huggingface_demo" class="collapse" style="">
+				<div class="card-body">
+			    	    <center>
+					<iframe src="https://hilamanor-audioediting.hf.space" frameborder="0" width="100%" height="600"></iframe>
+				    </center>
+				</div>
+		    	    </div>
+	        	</div>
+		    </div>	
 
                 </div>
-			</center>
+	</center>
 
-		<br>
+	<br>
         <h2 id="unsupsamples" class="anchor">1.2. Samples of Unsupervised Editing</h2>
         For the unsupervised editing, we split the samples into two sections.<br>
         The first section (Strength changes) shows how the same direction applied with different strengths changes the audio sequentially.<br>
@@ -535,7 +559,7 @@
                                     <th scope="col">Target Prompt</th>
                                     <th scope="col">Original Audio</th>
                                     <th scope="col">Ours</th>
-                                    <th scope="col">SDEdit<br>skip=100<br>skip=130<br>skip=160</th>
+                                    <th scope="col">SDEdit<br>T<sub>start</sub>=100<br>T<sub>start</sub>=70<br>T<sub>start</sub>=40</th>
                                     <th scope="col">MusicGen</th>
                                     <th scope="col">DDIM Inversion</th>
                                 </tr>
@@ -548,7 +572,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBritpop.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/arabic_MDDBBritpop_ours_90.mp3" type="audio/mp4"></audio>
-                                        <br>skip=90
+                                        <br>T<sub>start</sub>=110
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/arabic_MDDBBritpop_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -567,7 +591,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBeatles.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/arcade_MDDBBeatles_ours_100.mp3" type="audio/mp4"></audio>
-                                        <br>skip=100
+                                        <br>T<sub>start</sub>=100
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/arcade_MDDBBeatles_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -586,7 +610,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBeethoven.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/techno_MDDBBeethoven_ours_110.mp3" type="audio/mp4"></audio>
-                                        <br>skip=110
+                                        <br>T<sub>start</sub>=90
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/techno_MDDBBeethoven_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -605,7 +629,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBeethoven.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/instrument_MDDBBeethoven_ours_130.mp3" type="audio/mp4"></audio>
-                                        <br>skip=130
+                                        <br>T<sub>start</sub>=70
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/instrument_MDDBBeethoven_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -630,7 +654,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBPunk.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/jazz_MDDBPunk_ours_110.mp3" type="audio/mp4"></audio>
-                                        <br>skip=110
+                                        <br>T<sub>start</sub>=90
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/jazz_MDDBPunk_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -649,7 +673,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBRockabilly.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/techno_MDDBRockabilly_ours_110.mp3" type="audio/mp4"></audio>
-                                        <br>skip=110
+                                        <br>T<sub>start</sub>=90
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/techno_MDDBRockabilly_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -668,7 +692,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBFreeJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/orchestra_MDDBFreeJazz_ours_90.mp3" type="audio/mp4"></audio>
-                                        <br>skip=90
+                                        <br>T<sub>start</sub>=110
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/orchestra_MDDBFreeJazz_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -687,7 +711,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBFunkJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/hiphop_MDDBFunkJazz_ours_90.mp3" type="audio/mp4"></audio>
-                                        <br>skip=90
+                                        <br>T<sub>start</sub>=110
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/hiphop_MDDBFunkJazz_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -706,7 +730,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBBebopJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/arcade_MDDBBebopJazz_ours_120.mp3" type="audio/mp4"></audio>
-                                        <br>skip=120
+                                        <br>T<sub>start</sub>=80
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/arcade_MDDBBebopJazz_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -725,7 +749,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBGospel.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/techno_MDDBGospel_ours_100.mp3" type="audio/mp4"></audio>
-                                        <br>skip=100
+                                        <br>T<sub>start</sub>=100
                                     </td>
                                     <td class="text-center align-top align-top" hidden>
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/techno_MDDBGospel_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -750,7 +774,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBModalJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/country_MDDBModalJazz_ours_110.mp3" type="audio/mp4"></audio>
-                                        <br>skip=110
+                                        <br>T<sub>start</sub>=90
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/country_MDDBModalJazz_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -769,7 +793,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBChineseDrama.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/metal_MDDBChineseDrama_ours_160.mp3" type="audio/mp4"></audio>
-                                        <br>skip=160
+                                        <br>T<sub>start</sub>=40
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/metal_MDDBChineseDrama_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -788,7 +812,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBChineseChaoZhou.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/tone_MDDBChineseChaoZhou_ours_120.mp3" type="audio/mp4"></audio>
-                                        <br>skip=120
+                                        <br>T<sub>start</sub>=80
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/tone_MDDBChineseChaoZhou_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -807,7 +831,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBChineseYaoZu.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/arcade_MDDBChineseYaoZu_ours_90.mp3" type="audio/mp4"></audio>
-                                        <br>skip=90
+                                        <br>T<sub>start</sub>=110
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/arcade_MDDBChineseYaoZu_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -826,7 +850,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBZeppelin.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/jazz_MDDBZeppelin_ours_100.mp3" type="audio/mp4"></audio>
-                                        <br>skip=100
+                                        <br>T<sub>start</sub>=100
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/jazz_MDDBZeppelin_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -845,7 +869,7 @@
                                     <td class="text-center align-top"><audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/orig/MDDBLatinJazz.mp3" type="audio/mp4"></audio></td>
                                     <td class="text-center align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sup_samples/arcade_MDDBLatinJazz_ours_110.mp3" type="audio/mp4"></audio>
-                                        <br>skip=110
+                                        <br>T<sub>start</sub>=90
                                     </td>
                                     <td class="text-center align-top align-top">
                                         <audio preload="auto" class="shorteraudio" controls><source src="./resources/audio/sdedit/arcade_MDDBLatinJazz_sdedit_100.mp3" type="audio/mp4"></audio>
@@ -879,10 +903,10 @@
                                 <th scope="col">Target Prompt</th>
                                 <th scope="col">Original Audio</th>
                                 <th scope="col">Ours</th>
-                                <th scope="col">SDEdit skip=50</th>
-                                <th scope="col">SDEdit skip=80</th>
-                                <th scope="col">SDEdit skip=100</th>
-                                <th scope="col">SDEdit skip=130</th>
+                                <th scope="col">SDEdit T<sub>start</sub>=150</th>
+                                <th scope="col">SDEdit T<sub>start</sub>=120</th>
+                                <th scope="col">SDEdit T<sub>start</sub>=100</th>
+                                <th scope="col">SDEdit T<sub>start</sub>=70</th>
                                 <th scope="col">DDIM Inversion</th>
                             </tr>
                         </thead>
@@ -892,7 +916,8 @@
                                 <td>A high quality recording of a cat meowing.</td>
                                 <td>A high quality recording of a dog barking.</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/CuteCat_10sec.mp3" type="audio/mp4"></audio></td>
-                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/CuteCat_10sec_ours_50.mp3" type="audio/mp4"></audio>                                    <br>skip=50</td>
+                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/CuteCat_10sec_ours_50.mp3" type="audio/mp4"></audio>
+                                    <br>T<sub>start</sub>=150</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/CuteCat_10sec_sdedit_50.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/CuteCat_10sec_sdedit_80.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/CuteCat_10sec_sdedit_100.mp3" type="audio/mp4"></audio></td>
@@ -904,7 +929,8 @@
                                 <td>A high quality recording of a dog barking a lot.</td>
                                 <td>A high quality recording of a gun shooting a lot.</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/DogBarking_10sec.mp3" type="audio/mp4"></audio></td>
-                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/DogBarking_10sec_ours_100.mp3" type="audio/mp4"></audio>                                    <br>skip=100</td>
+                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/DogBarking_10sec_ours_100.mp3" type="audio/mp4"></audio>
+                                    <br>T<sub>start</sub>=100</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/DogBarking_10sec_sdedit_50.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/DogBarking_10sec_sdedit_80.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/DogBarking_10sec_sdedit_100.mp3" type="audio/mp4"></audio></td>
@@ -916,7 +942,8 @@
                                 <td>A kid talking loudly.</td>
                                 <td>A rooster crowing.</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/orig/Shouting.mp3" type="audio/mp4"></audio></td>
-                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/Shouting_ours_90.mp3" type="audio/mp4"></audio>                                    <br>skip=90</td>
+                                <td><audio class="shorteraudio" controls><source src="./resources/audio/sup_samples/Shouting_ours_90.mp3" type="audio/mp4"></audio>
+                                    <br>T<sub>start</sub>=110</td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/Shouting_sdedit_50.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/Shouting_sdedit_80.mp3" type="audio/mp4"></audio></td>
                                 <td><audio class="shorteraudio" controls><source src="./resources/audio/sdedit/Shouting_sdedit_100.mp3" type="audio/mp4"></audio></td>
@@ -945,10 +972,10 @@
                                     <th scope="col">Inversion Prompt</th>
                                     <th scope="col">Original Audio</th>
                                     <th scope="col">Our Semantic Edit</th>
-                                    <th scope="col">SDEdit Skip=85</th>
-                                    <th scope="col">SDEdit Skip=100</th>
-                                    <th scope="col">SDEdit Skip=115</th>
-                                    <th scope="col">SDEdit Skip=130</th>
+                                    <th scope="col">SDEdit T<sub>start</sub>=115</th>
+                                    <th scope="col">SDEdit T<sub>start</sub>=100</th>
+                                    <th scope="col">SDEdit T<sub>start</sub>=85</th>
+                                    <th scope="col">SDEdit T<sub>start</sub>=70</th>
                                     <th scope="col">Our Edit Parameters</th>
                                 </tr>
                             </thead>
@@ -1130,7 +1157,7 @@
 		<div class="container-xl">
 			<p class="text-left">
 				More results and further discussion about our method can be found in the supplementary material (included in the <a href="https://arxiv.org/abs/2402.10009" target="_blank" rel="noopener noreferrer">paper</a>) and our <b><a href="supp.html">supplemental examples page</a></b>.<br>
-				Our official code implementation can be found in the official <a href="https://github.com/HilaManor/AudioEditing" target="_blank" rel="noopener noreferrer">github repository</a>.
+				Our official code implementation can be found in the official <a href="https://github.com/HilaManor/AudioEditingCode" target="_blank" rel="noopener noreferrer">github repository</a>.
 			</p>
 		</div>
 
@@ -1139,14 +1166,14 @@
 				<tbody>
 					<tr>
 						<td width="50%" style="text-align: center;">
-							<a href="https://github.com/HilaManor/AudioEditing" target="_blank" rel="noopener noreferrer">
+							<a href="https://github.com/HilaManor/AudioEditingCode" target="_blank" rel="noopener noreferrer">
 								<img alt="" id="github_logo" class="round" width="100%" style="max-width:150px" src="./resources/github_logo.png"/>
 							</a>
 						</td>
 					</tr>
 					<tr>
 						<td style="font-size:14pt; text-align: center;">
-							<a target="_blank" rel="noopener noreferrer" role="button" class="btn btn-outline-primary" href='https://github.com/HilaManor/AudioEditing'>
+							<a target="_blank" rel="noopener noreferrer" role="button" class="btn btn-outline-primary" href='https://github.com/HilaManor/AudioEditingCode'>
                                 Code
                             </a>
 						</td>
