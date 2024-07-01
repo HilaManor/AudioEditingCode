@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from diffusers import DDIMScheduler  # , DDPMScheduler
 from diffusers import AudioLDMPipeline, AudioLDM2Pipeline, StableDiffusionPipeline
 from transformers import RobertaTokenizer, RobertaTokenizerFast
-from diffusers.models.unet_2d_condition import UNet2DConditionOutput
+from diffusers.models.unets.unet_2d_condition import UNet2DConditionOutput
 import os
 from huggingface_hub import snapshot_download
 import json
