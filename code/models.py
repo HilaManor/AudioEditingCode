@@ -3,7 +3,12 @@ import torch.nn.functional as F
 from diffusers import DDIMScheduler  # , DDPMScheduler
 from diffusers import AudioLDMPipeline, AudioLDM2Pipeline, StableDiffusionPipeline
 from transformers import RobertaTokenizer, RobertaTokenizerFast
-from diffusers.models.unet_2d_condition import UNet2DConditionOutput
+# huggingface diffusers changed the unets location in version 0.26.0
+from diffusers import __version__ as diffusers_version
+if int(diffusers_version.split('.')[1]) >= 26:
+    from diffusers.models.unets.unet_2d_condition import UNet2DConditionOutput
+else:
+    from diffusers.models.unet_2d_condition import UNet2DConditionOutput
 import os
 from huggingface_hub import snapshot_download
 import json
