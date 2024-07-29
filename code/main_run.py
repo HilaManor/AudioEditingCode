@@ -29,9 +29,9 @@ if __name__ == "__main__":
                         default="cvssp/audioldm-s-full-v2", help='Audio diffusion model to use')
 
     parser.add_argument("--init_aud", type=str, required=True, help='Audio to invert and extract PCs from')
-    parser.add_argument("--cfg_src", type=float, nargs='+', default=[3.5],
+    parser.add_argument("--cfg_src", type=float, nargs='+', default=[3],
                         help='Classifier-free guidance strength for forward process')
-    parser.add_argument("--cfg_tar", type=float, nargs='+', default=[15],
+    parser.add_argument("--cfg_tar", type=float, nargs='+', default=[12],
                         help='Classifier-free guidance strength for reverse process')
     parser.add_argument("--num_diffusion_steps", type=int, default=200,
                         help="Number of diffusion steps. TANGO and AudioLDM2 are recommended to be used with 200 steps"
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                         help="Prompt to accompany the forward process. Should describe the original audio.")
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help="Negative prompt to accompany the inversion and generation process")
-    parser.add_argument("--tstart", type=int, nargs='+', default=[0],
+    parser.add_argument("--tstart", type=int, nargs='+', default=[100],
                         help="Diffusion timestep to start the reverse process from. Controls editing strength.")
     parser.add_argument("--results_path", type=str, default="results", help="path to dump results")
 
