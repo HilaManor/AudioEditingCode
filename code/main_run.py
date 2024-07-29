@@ -26,7 +26,7 @@ if __name__ == "__main__":
                                                          "cvssp/audioldm2-music",
                                                          'declare-lab/tango-full-ft-audio-music-caps',
                                                          'declare-lab/tango-full-ft-audiocaps'],
-                        default="cvssp/audioldm-s-full-v2", help='Audio diffusion model to use')
+                        default="cvssp/audioldm2-music", help='Audio diffusion model to use')
 
     parser.add_argument("--init_aud", type=str, required=True, help='Audio to invert and extract PCs from')
     parser.add_argument("--cfg_src", type=float, nargs='+', default=[3],
