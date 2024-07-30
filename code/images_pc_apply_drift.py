@@ -100,7 +100,7 @@ if __name__ == "__main__":
     os.makedirs(drifts_path, exist_ok=True)
 
     text_embeddings_class_labels, text_emb, uncond_emb = get_text_embeddings(
-        extraction_args.target_prompt, extraction_args.target_neg_prompt, ldm_stable)
+        extraction_args.source_prompt, extraction_args.target_neg_prompt, ldm_stable)
 
     # Set mask
     if args.fix_alpha is not None:

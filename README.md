@@ -45,10 +45,12 @@ Supported models are AudioLDM, TANGO, and AudioLDM2. For unsupervised editing, S
 CUDA_VISIBLE_DEVICES=<gpu_num> python main_run.py --cfg_tar <target_cfg_strength> --cfg_src <source_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --tstart <edit from timestep> --model_id <model_name> --results_path <path to dump results>
 ```
 
-You can supply a source prompt that describes the original audio by using `--source_prompt`.  
+- You can supply a source prompt that describes the original audio by using `--source_prompt`.  
+- `tstart` is set to `100` by default, which is the configuration used in the user study. The quantitative results in the paper include values ranging from `40` to `100`.
+
 Use `python main_run.py --help` for all options.
 
-use `--mode ddim` to run DDIM inversion and editing (note that `--tstart` must be equal to `num_diffusion_steps` (by default set to `200`)).
+use `--mode ddim` to run DDIM inversion and editing (note that for plain DDIM Inversion `--tstart` must be equal to `num_diffusion_steps` (by default set to `200`)).
 
 ### Unsupervised Editing
 
@@ -82,6 +84,8 @@ SDEdit can be run similarly with:
 ```bash
 CUDA_VISIBLE_DEVICES=<gpu_num> python main_run_sdedit.py --cfg_tar <target_cfg_strength> --init_aud <input_audio_path> --target_prompt <description of the wanted edited signal> --tstart <edit from timestep> --model_id <model_name> --results_path <path to dump results>
 ```
+
+- `tstart` is set to `100` by default, which is the configuration used in the user study. The quantitative results in the paper include values ranging from `40` to `100`.
 
 Use `python main_run_sdedit.py --help` for all options.
 

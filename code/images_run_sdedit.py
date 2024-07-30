@@ -31,7 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help="Negative prompt to accompany the inversion and generation process")
     parser.add_argument('--results_path', default='sdedit', help='path to dump results')
-    parser.add_argument("--tstart", type=int, default=0,
+    parser.add_argument("--tstart", type=int, default=50,
                         help="Diffusion timestep to start the reverse process from. Controls editing strength.")
 
     parser.add_argument('--wandb_name', type=str, default=None)

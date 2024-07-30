@@ -24,7 +24,7 @@ if __name__ == "__main__":
                                                          "cvssp/audioldm2-music",
                                                          'declare-lab/tango-full-ft-audio-music-caps',
                                                          'declare-lab/tango-full-ft-audiocaps'],
-                        default="cvssp/audioldm-s-full-v2", help='Audio diffusion model to use')
+                        default="cvssp/audioldm2-music", help='Audio diffusion model to use')
 
     parser.add_argument("--init_aud", type=str, required=True, help='Audio to invert and extract PCs from')
     parser.add_argument("--cfg_tar", type=float, default=12, help='Classifier-free guidance strength for reverse process')
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help="Negative prompt to accompany the inversion and generation process")
     parser.add_argument('--results_path', default='sdedit', help='path to dump results')
-    parser.add_argument("--tstart", type=int, default=0,
+    parser.add_argument("--tstart", type=int, default=100,
                         help="Diffusion timestep to start the reverse process from. Controls editing strength.")
 
     parser.add_argument('--wandb_name', type=str, default=None)
