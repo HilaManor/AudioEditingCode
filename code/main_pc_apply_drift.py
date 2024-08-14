@@ -36,6 +36,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args.shift_x0_for_np = True
     args.sub_iters = None
+
+    # Input check
+    if args.drift_start < args.drift_end:
+        raise ValueError('Drift start must be greater than drift end')
     
     set_reproducability(args.seed)
 
