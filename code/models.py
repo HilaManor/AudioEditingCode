@@ -1,26 +1,21 @@
 import torch
 import torch.nn.functional as F
-from diffusers import DDIMScheduler  # , DDPMScheduler
+from diffusers import DDIMScheduler, UNet2DModel, VQModel
 from diffusers import AudioLDMPipeline, AudioLDM2Pipeline, StableDiffusionPipeline
 from transformers import RobertaTokenizer, RobertaTokenizerFast
-# huggingface diffusers changed the unets location in version 0.26.0
-from diffusers import __version__ as diffusers_version
-if int(diffusers_version.split('.')[1]) >= 26:
-    from diffusers.models.unets.unet_2d_condition import UNet2DConditionOutput
-else:
-    from diffusers.models.unet_2d_condition import UNet2DConditionOutput
+from diffusers.models.unets.unet_2d_condition import UNet2DConditionOutput  # huggingface diffusers changed the unets location in version 0.26.0
 import os
-from huggingface_hub import snapshot_download
 import json
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 class PipelineWrapper(torch.nn.Module):
-    def __init__(self, model_id, device, double_precision=False, *args, **kwargs) -> None:
+    def __init__(self, model_id, device, double_precision=False, token=None, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.model_id = model_id
         self.device = device
         self.double_precision = double_precision
+        self.token = token
 
     def get_sigma(self, timestep) -> float:
         sqrt_recipm1_alphas_cumprod = torch.sqrt(1.0 / self.model.scheduler.alphas_cumprod - 1)
@@ -41,13 +36,16 @@ class PipelineWrapper(torch.nn.Module):
     def decode_to_mel(self, x: torch.Tensor):
         pass
 
-    def encode_text(self, prompts: List[str]) -> Tuple:
+    def setup_extra_inputs(self, *args, **kwargs):
         pass
 
-    def get_variance(self, timestep, prev_timestep):
+    def encode_text(self, prompts: List[str], **kwargs) -> Tuple:
         pass
 
-    def get_alpha_prod_t_prev(self, prev_timestep):
+    def get_variance(self, timestep, prev_timestep: int):
+        pass
+
+    def get_alpha_prod_t_prev(self, prev_timestep: int):
         pass
 
     def unet_forward(self,
@@ -905,20 +903,96 @@ class StableDiffWrapper(PipelineWrapper):
         return unet_out, None, None
 
 
-def load_model(model_id, device, num_diffusion_steps, double_precision=False):
+class CelebAHQWrapper(PipelineWrapper):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        # self.model = DiffusionPipeline.from_pretrained(self.model_id, token=self.token).to(self.device)
+        self.vqvae = VQModel.from_pretrained(self.model_id, subfolder="vqvae", token=self.token,
+                                             torch_dtype=torch.float32).to(self.device).to(torch.float32)
+
+        class dummyModule(torch.nn.Module):
+            def __init__(self, model, scheduler):
+                super().__init__()
+                self.unet = model
+                self.scheduler = scheduler
+
+            def forward(self, x):
+                pass
+
+        self.model = dummyModule(model=UNet2DModel.from_pretrained(self.model_id, subfolder="unet", token=self.token,
+                                                                   torch_dtype=torch.float32
+                                                                   ).to(self.device).to(torch.float32),
+                                 scheduler=None
+                                 ).to(self.device).to(torch.float32)
+
+    def load_scheduler(self):
+        self.model.scheduler = DDIMScheduler.from_pretrained(self.model_id, subfolder="scheduler")
+
+    def vae_encode(self, x):
+        # self.model.vae.disable_tiling()
+        return (self.vqvae.encode(x).latents).float()
+        # return (self.vqvae.encode(x).latents * self.vqvae.config.scaling_factor).float()
+
+    def vae_decode(self, x):
+        return self.vqvae.decode(x).sample
+        # return self.vqvae.decode(1 / self.vqvae.config.scaling_factor * x).sample
+
+    def encode_text(self, *args, **kwargs):
+        return None, None, None
+
+    def get_variance(self, timestep, prev_timestep):
+        alpha_prod_t = self.model.scheduler.alphas_cumprod[timestep]
+        alpha_prod_t_prev = self.get_alpha_prod_t_prev(prev_timestep)
+        beta_prod_t = 1 - alpha_prod_t
+        beta_prod_t_prev = 1 - alpha_prod_t_prev
+        variance = (beta_prod_t_prev / beta_prod_t) * (1 - alpha_prod_t / alpha_prod_t_prev)
+        return variance
+
+    def get_alpha_prod_t_prev(self, prev_timestep):
+        return self.model.scheduler.alphas_cumprod[prev_timestep] if prev_timestep >= 0 \
+            else self.model.scheduler.final_alpha_cumprod
+
+    def unet_forward(self,
+                     sample: torch.FloatTensor,
+                     timestep: Union[torch.Tensor, float, int],
+                     encoder_hidden_states: torch.Tensor,
+                     class_labels: Optional[torch.Tensor] = None,
+                     timestep_cond: Optional[torch.Tensor] = None,
+                     attention_mask: Optional[torch.Tensor] = None,
+                     cross_attention_kwargs: Optional[Dict[str, Any]] = None,
+                     added_cond_kwargs: Optional[Dict[str, torch.Tensor]] = None,
+                     down_block_additional_residuals: Optional[Tuple[torch.Tensor]] = None,
+                     mid_block_additional_residual: Optional[torch.Tensor] = None,
+                     encoder_attention_mask: Optional[torch.Tensor] = None,
+                     replace_h_space: Optional[torch.Tensor] = None,
+                     replace_skip_conns: Optional[Dict[int, torch.Tensor]] = None,
+                     return_dict: bool = True,
+                     zero_out_resconns: Optional[Union[int, List]] = None) -> Tuple:        
+
+        unet_out = self.model.unet(sample, timestep, None)
+
+        if not return_dict:
+            return unet_out
+
+        return unet_out, None, None
+
+
+
+
+def load_model(model_id, device, num_diffusion_steps, double_precision=False, token=None):
     if 'tango' in model_id:
-        ldm_stable = TangoWrapper(model_id=model_id, device=device, double_precision=double_precision)
+        ldm_stable = TangoWrapper(model_id=model_id, device=device, double_precision=double_precision, token=token)
     elif 'audioldm2' in model_id:
-        ldm_stable = AudioLDM2Wrapper(model_id=model_id, device=device, double_precision=double_precision)
+        ldm_stable = AudioLDM2Wrapper(model_id=model_id, device=device, double_precision=double_precision, token=token)
     elif 'audioldm' in model_id:
-        ldm_stable = AudioLDMWrapper(model_id=model_id, device=device, double_precision=double_precision)
-    elif 'stable' in model_id:
-        ldm_stable = StableDiffWrapper(model_id=model_id, device=device, double_precision=double_precision)
+        ldm_stable = AudioLDMWrapper(model_id=model_id, device=device, double_precision=double_precision, token=token)
+    elif 'stable-diffusion' in model_id:
+        ldm_stable = StableDiffWrapper(model_id=model_id, device=device, double_precision=double_precision, token=token)
+    elif 'ldm-celebahq' in model_id:
+        ldm_stable = CelebAHQWrapper(model_id=model_id, device=device, double_precision=double_precision, token=token)
     ldm_stable.load_scheduler()
     ldm_stable.model.scheduler.set_timesteps(num_diffusion_steps, device=device)
+    if hasattr(ldm_stable.model, 'training_sched'):
+        ldm_stable.training_sched.set_timesteps(num_diffusion_steps, device=device)
     torch.cuda.empty_cache()
-    # controller = AttentionStore()
-    # controller = EmptyControl()
-    # register_attention_control(ldm_stable.model, controller)
-    # return ldm_stable, controller
     return ldm_stable

@@ -58,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument('--wandb_disable', action='store_true')
 
     args = parser.parse_args()
-    
+
     # parser.add_argument('--pc_mode', type=str, choices=['both', 'text', 'uncond'], default='both')
     args.pc_mode = 'both'
     args.eta = 1.
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     args.double_precision = False
     args.x_prev_mode = False
     args.test_rand_gen = False
-    
+
     set_reproducability(args.seed)
 
     current_GMT = time.gmtime()

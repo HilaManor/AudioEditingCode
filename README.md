@@ -19,6 +19,7 @@ This repository contains the official code release for ***Zero-Shot Unsupervised
 <!-- omit in toc -->
 ## Table of Contents
 
+- [Change Log](#change-log)
 - [Requirements](#requirements)
 - [Usage Example](#usage-example)
   - [Text-Based Editing](#text-based-editing)
@@ -28,6 +29,10 @@ This repository contains the official code release for ***Zero-Shot Unsupervised
 - [MedleyMDPrompts](#medleymdprompts)
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
+
+## Change Log
+
+**2024-09-09**: Added a wrapper for a face-images unconditional LDM model (trained on CelebAHQ), relevant for unsupervised editing. Additionally, moved to PyTorch > 2.2, Diffusers > 0.26 to accomodate security concerns. The version tested in the paper is still reachable in the `paper_code` branch.
 
 ## Requirements
 

@@ -106,11 +106,14 @@ if __name__ == "__main__":
     if args.fix_alpha is not None:
         mask = torch.zeros_like(latents[0], device=device)
         if extraction_args.patch is not None:
-            mask[:, :, extraction_args.patch[0]: extraction_args.patch[1], :] = 1
+            mask[:, :, extraction_args.patch[2]: extraction_args.patch[3], extraction_args.patch[0]: extraction_args.patch[1]] = 1
             if args.fade_length > 0:
-                mask[:, :, extraction_args.patch[0] - args.fade_length: extraction_args.patch[0], :] = \
+                raise NotImplementedError("Didn't check this")
+                mask[:, :, extraction_args.patch[2] - args.fade_length: extraction_args.patch[2],
+                     extraction_args.patch[0] - args.fade_length: extraction_args.patch[0]] = \
                     torch.linspace(0, 1, args.fade_length, device=device)[None, None, :, None]
-                mask[:, :, extraction_args.patch[1]: extraction_args.patch[1] + args.fade_length, :] = \
+                mask[:, :, extraction_args.patch[3]: extraction_args.patch[3] + args.fade_length,
+                     extraction_args.patch[1]: extraction_args.patch[1] + args.fade_length] = \
                     torch.linspace(1, 0, args.fade_length, device=device)[None, None, :, None]
         else:
             mask[:, :, :, :] = 1

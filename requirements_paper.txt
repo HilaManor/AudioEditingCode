@@ -1,11 +1,11 @@
 diffusers
-huggingface-hub
+huggingface-hub<1.0,>=0.19.4
 matplotlib
-numpy<2.0.0
+numpy==1.24.2
 opencv-python
-torch>2.2.0
-torchaudio
-torchvision
+torch==2.0.0
+torchaudio==2.0.1
+torchvision==0.15.1
 tqdm
 transformers
 einops

@@ -196,10 +196,11 @@ if __name__ == "__main__":
     torchaudio.save(save_full_path_wave, audio, sample_rate=16000)
     torchaudio.save(save_full_path_origwave, orig_audio, sample_rate=16000)
 
-    logging_dict = {'orig': wandb.Audio(orig_audio.squeeze(), caption='orig', sample_rate=16000),
-                    'orig_spec': wandb.Image(x0[0, 0].T.cpu().detach().numpy(), caption='orig'),
-                    'gen': wandb.Audio(audio.squeeze(), caption=image_name_png, sample_rate=16000),
-                    'gen_spec': wandb.Image(x0_dec[0, 0].T.cpu().detach().numpy(), caption=image_name_png)}
-    wandb.log(logging_dict)
+    if not args.wandb_disable:
+        logging_dict = {'orig': wandb.Audio(orig_audio.squeeze(), caption='orig', sample_rate=sr),
+                        'orig_spec': wandb.Image(x0[0, 0].T.cpu().detach().numpy(), caption='orig'),
+                        'gen': wandb.Audio(audio[0].squeeze(), caption=image_name_png, sample_rate=sr),
+                        'gen_spec': wandb.Image(x0_dec[0, 0].T.cpu().detach().numpy(), caption=image_name_png)}
+        wandb.log(logging_dict)
 
     wandb_run.finish()

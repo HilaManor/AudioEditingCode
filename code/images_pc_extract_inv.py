@@ -22,7 +22,8 @@ if __name__ == "__main__":
     parser.add_argument("--device_num", type=int, default=0, help="GPU device number")
     parser.add_argument('-s', "--seed", type=int, default=None, help='Set random seed')
     parser.add_argument("--cfg_tar", type=float, nargs='+', default=3, help='Classifier-free guidance strength')
-    parser.add_argument("--model_id", type=str, choices=["CompVis/stable-diffusion-v1-4"],
+    parser.add_argument("--model_id", type=str, choices=["CompVis/stable-diffusion-v1-4",
+                                                         "CompVis/ldm-celebahq-256"],
                         default="CompVis/stable-diffusion-v1-4", help='Image diffusion model to use')
 
     parser.add_argument("--init_im", type=str, required=True, help='Image to invert and extract PCs from')
@@ -42,9 +43,10 @@ if __name__ == "__main__":
 
     parser.add_argument('-c', '--const', type=float, default=1e-3, help='Normalizing const for the power iterations')
     parser.add_argument('--n_evs', type=int, default=1, help='Number of eigenvectors to extract')
-    parser.add_argument('-p', '--patch', nargs=2, default=None, type=int,
+    parser.add_argument('-p', '--patch', nargs=4, default=None, type=int,
                         help='Set a specific patch to extract PC for. Format: x1 x2.')
     parser.add_argument('-t', '--iters', type=int, default=50, help='Amount of power iterations')
+    parser.add_argument('-r', '--resize', nargs=2, type=int, default=(256, 256), help='Resize image to this size')
     parser.add_argument('-d', '--dry', action='store_true',
                         help='Dry run, just unconditional generation without PC extraction (fast)')
 
@@ -53,7 +55,7 @@ if __name__ == "__main__":
     parser.add_argument('--wandb_disable', action='store_true')
 
     args = parser.parse_args()
-    
+
     # parser.add_argument('--pc_mode', type=str, choices=['both', 'text', 'uncond'], default='both')
     args.pc_mode = 'both'
     args.eta = 1.
@@ -61,13 +63,13 @@ if __name__ == "__main__":
     args.double_precision = False
     args.x_prev_mode = False
     args.test_rand_gen = False
-    
+
     set_reproducability(args.seed)
 
     current_GMT = time.gmtime()
     time_stamp_name = calendar.timegm(current_GMT)
     image_name_png = f's{args.seed}_' + \
-        (f'p{args.patch[0]}-{args.patch[1]}_' if args.patch is not None else '') + \
+        (f'p{args.patch[0]}-{args.patch[1]}_{args.patch[2]}-{args.patch[3]}_' if args.patch is not None else '') + \
         f'pc-{args.pc_mode}_cfgd{args.cfg_tar}_' + \
         f'drift{args.drift_start}-{args.drift_end}_it{args.iters}_c{args.const:.1e}' + \
         f'{"_dp" if args.double_precision else ""}_{time_stamp_name}'
@@ -101,7 +103,7 @@ if __name__ == "__main__":
     drift_start_it = args.num_diffusion_steps - args.drift_start  # 80 = 200 - 120
     drift_end_it = args.num_diffusion_steps - args.drift_end  # 140 = 200 - 60
 
-    x0 = load_image(args.init_im, device=device)
+    x0 = load_image(args.init_im, device=device, resize=args.resize)
     with inference_mode():
         w0 = ldm_stable.vae_encode(x0)
 
@@ -140,7 +142,7 @@ if __name__ == "__main__":
     # Set mask
     mask = torch.zeros_like(latents[0])
     if args.patch is not None:
-        mask[:, :, args.patch[0]: args.patch[1], :] = 1
+        mask[:, :, args.patch[2]: args.patch[3], args.patch[0]: args.patch[1]] = 1
     else:
         mask[:, :, :, :] = 1
 

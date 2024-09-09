@@ -13,6 +13,7 @@ from models import PipelineWrapper
 
 
 def load_image(image_path: str, left: int = 0, right: int = 0, top: int = 0, bottom: int = 0,
+               resize: Tuple[int, int] = (512, 512),
                device: Optional[torch.device] = None) -> torch.Tensor:
     if type(image_path) is str:
         from PIL import Image
@@ -35,7 +36,7 @@ def load_image(image_path: str, left: int = 0, right: int = 0, top: int = 0, bot
     elif w < h:
         offset = (h - w) // 2
         image = image[offset:offset + w]
-    image = np.array(Image.fromarray(image).resize((512, 512)))
+    image = np.array(Image.fromarray(image).resize(resize))
     image = T.functional.to_tensor(image).unsqueeze(0).to(device)
     image = image * 2 - 1
     # image = torch.from_numpy(image).float() / 127.5 - 1
