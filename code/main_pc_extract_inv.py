@@ -34,11 +34,13 @@ if __name__ == "__main__":
                         help='Number of diffusion steps. TANGO and AudioLDM2 are recommended to be used with 200 steps'
                              ', while AudioLDM is recommeneded to be used with 100 steps.')
     parser.add_argument("--source_prompt", type=str, nargs='+', default=[""],
-                        help='Prompt to accompany the inversion and generation process. Should describe the original audio.')
+                        help='Prompt to accompany the inversion and generation process. '
+                             'Should describe the original audio.')
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help='Negative prompt to accompany the inversion and generation process.')  # ["low quality"])
 
-    parser.add_argument("--corr_to_swap", type=float, default=0.8, help='Correlation threshold to swap eigenvector sign')
+    parser.add_argument("--corr_to_swap", type=float, default=0.8,
+                        help='Correlation threshold to swap eigenvector sign')
     parser.add_argument("--drift_start", type=int, default=None,
                         help='Timestep to start extracting PCs from. If not specified, will use the first timestep.')
     parser.add_argument("--drift_end", type=int, default=None,
@@ -64,7 +66,6 @@ if __name__ == "__main__":
     args.eta = 1.
     args.numerical_fix = True
     args.double_precision = False
-    args.x_prev_mode = False
     args.test_rand_gen = False
 
     set_reproducability(args.seed)
@@ -131,13 +132,12 @@ if __name__ == "__main__":
     #     ))
 
     # find Zs and wts - forward process
-    _, zs, wts = inversion_forward_process(ldm_stable, w0, etas=args.eta,
-                                           prompts=args.source_prompt, cfg_scales=[args.cfg_tar],
-                                           prog_bar=True,
-                                           num_inference_steps=args.num_diffusion_steps,
-                                           # cutoff_points=args.cutoff_points,
-                                           numerical_fix=args.numerical_fix,
-                                           x_prev_mode=args.x_prev_mode)
+    _, zs, wts, _ = inversion_forward_process(ldm_stable, w0, etas=args.eta,
+                                              prompts=args.source_prompt, cfg_scales=[args.cfg_tar],
+                                              prog_bar=True,
+                                              num_inference_steps=args.num_diffusion_steps,
+                                              # cutoff_points=args.cutoff_points,
+                                              numerical_fix=args.numerical_fix)
 
     wts = wts.flip(0)
     latents = [wts[0].unsqueeze(0), *[z.unsqueeze(0) for z in zs.flip(0)]]
@@ -212,7 +212,7 @@ if __name__ == "__main__":
                 for ev_num in range(args.n_evs):
                     if corr[ev_num] <= -args.corr_to_swap:
                         eigvecs[ev_num] *= -1
-                        print(f'swapped eigvec {ev_num +1}!')
+                        print(f'swapped eigvec {ev_num + 1}!')
                         # eigval *= -1 # TODO WHat happens to eigval
                         corr[ev_num] *= -1
                 corrs.append(corr)

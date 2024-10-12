@@ -5,7 +5,6 @@ from pc_drift import forward_directional, PCStreamChoice, apply_drift
 
 from torch import inference_mode
 import torch
-import torchaudio
 import wandb
 from tqdm import tqdm
 from utils import set_reproducability, get_text_embeddings
@@ -106,7 +105,8 @@ if __name__ == "__main__":
     if args.fix_alpha is not None:
         mask = torch.zeros_like(latents[0], device=device)
         if extraction_args.patch is not None:
-            mask[:, :, extraction_args.patch[2]: extraction_args.patch[3], extraction_args.patch[0]: extraction_args.patch[1]] = 1
+            mask[:, :, extraction_args.patch[2]: extraction_args.patch[3],
+                 extraction_args.patch[0]: extraction_args.patch[1]] = 1
             if args.fade_length > 0:
                 raise NotImplementedError("Didn't check this")
                 mask[:, :, extraction_args.patch[2] - args.fade_length: extraction_args.patch[2],
@@ -228,7 +228,7 @@ if __name__ == "__main__":
             f'_a{args.amount}.png'))
 
         logging_dict = {'image_gen': wandb.Image(np.array(images[0]),
-                                                caption=f'pcs{"".join([str(x) for x in args.evs])}_{run_name}')}
+                                                 caption=f'pcs{"".join([str(x) for x in args.evs])}_{run_name}')}
         wandb.log(logging_dict)
     else:
         for ev_idx, ev_num in enumerate(args.evs):

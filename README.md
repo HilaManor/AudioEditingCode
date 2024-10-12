@@ -32,7 +32,14 @@ This repository contains the official code release for ***Zero-Shot Unsupervised
 
 ## Change Log
 
-**2024-09-09**: Added a wrapper for a face-images unconditional LDM model (trained on CelebAHQ), relevant for unsupervised editing. Additionally, moved to PyTorch > 2.2, Diffusers > 0.26 to accomodate security concerns. The version tested in the paper is still reachable in the `paper_code` branch.
+**2024-10-12**: Added support for text-based editing using [Stable Audio Open 1.0](https://huggingface.co/stabilityai/stable-audio-open-1.0)!
+
+- Wasn't trained only on music, so results might vary. You can change the loaded checkpoint to finetuned models on music in `models.py:StableAudWrapper`.
+- You need to [accept the model's license](https://huggingface.co/stabilityai/stable-audio-open-1.0), then insert your Hugging Face token in `main_run.py:HF_TOKEN`.
+- Needs Diffusers >= 0.30.
+- Recommended to use with `src_cfg` of 1.
+
+**2024-09-09**: Added a wrapper for a face-images unconditional LDM model (trained on CelebAHQ), relevant for unsupervised editing. Additionally, moved to PyTorch >= 2.2, Diffusers >= 0.26 to accommodate security concerns. The version tested in the paper is still reachable in the `paper_code` branch.
 
 ## Requirements
 
@@ -117,19 +124,19 @@ The `source_caption_index` column indexes the (ordered) index (starting from 1) 
 
 If you use this code or the MedleyMDPrompts dataset for your research, please cite our paper:
 
-```
+```latex
 @inproceedings{manor2024zeroshot,
-  title = 	 {Zero-Shot Unsupervised and Text-Based Audio Editing Using {DDPM} Inversion},
-  author =       {Manor, Hila and Michaeli, Tomer},
-  booktitle = 	 {Proceedings of the 41st International Conference on Machine Learning},
-  pages = 	 {34603--34629},
-  year = 	 {2024},
-  editor = 	 {Salakhutdinov, Ruslan and Kolter, Zico and Heller, Katherine and Weller, Adrian and Oliver, Nuria and Scarlett, Jonathan and Berkenkamp, Felix},
-  volume = 	 {235},
-  series = 	 {Proceedings of Machine Learning Research},
-  month = 	 {21--27 Jul},
-  publisher =    {PMLR},
-  url = 	 {https://proceedings.mlr.press/v235/manor24a.html},
+  title =     {Zero-Shot Unsupervised and Text-Based Audio Editing Using {DDPM} Inversion},
+  author =    {Manor, Hila and Michaeli, Tomer},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning},
+  pages =     {34603--34629},
+  year =      {2024},
+  editor =    {Salakhutdinov, Ruslan and Kolter, Zico and Heller, Katherine and Weller, Adrian and Oliver, Nuria and Scarlett, Jonathan and Berkenkamp, Felix},
+  volume =    {235},
+  series =    {Proceedings of Machine Learning Research},
+  month =     {21--27 Jul},
+  publisher = {PMLR},
+  url =       {https://proceedings.mlr.press/v235/manor24a.html},
 }
 ```
 

@@ -3,15 +3,12 @@ from models import load_model
 import os
 from torch import inference_mode
 import torch
-import matplotlib.pyplot as plt
-import torchaudio
 import wandb
 from tqdm import tqdm
 from utils import set_reproducability, get_text_embeddings, load_image
 from pc_drift import forward_directional
 import torchvision.transforms as T
-from PIL import Image
-import  numpy as np
+import numpy as np
 # torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
 
 if __name__ == "__main__":
@@ -22,7 +19,8 @@ if __name__ == "__main__":
                         default="CompVis/stable-diffusion-v1-4", help='Audio diffusion model to use')
 
     parser.add_argument("--init_im", type=str, required=True, help='Audio to invert and extract PCs from')
-    parser.add_argument("--cfg_tar", type=float, default=12, help='Classifier-free guidance strength for reverse process')
+    parser.add_argument("--cfg_tar", type=float, default=12,
+                        help='Classifier-free guidance strength for reverse process')
     parser.add_argument("--num_diffusion_steps", type=int, default=100,
                         help="Number of diffusion steps. TANGO and AudioLDM2 are recommended to be used with 200 steps"
                              ", while AudioLDM is recommeneded to be used with 100 steps")
@@ -103,7 +101,7 @@ if __name__ == "__main__":
     x0_dec = x0_dec.clamp(-1, 1)
 
     with torch.no_grad():
-        x0_dec  = (x0_dec + 1) / 2
+        x0_dec = (x0_dec + 1) / 2
         x0 = (x0 + 1) / 2
         image = T.functional.to_pil_image(x0_dec[0].cpu().detach())
         orig_image = T.functional.to_pil_image(x0[0].cpu().detach())

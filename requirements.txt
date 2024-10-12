@@ -6,6 +6,7 @@ opencv-python
 torch>2.2.0
 torchaudio
 torchvision
+torchsde
 tqdm
 transformers
 einops

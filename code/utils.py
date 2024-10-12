@@ -10,6 +10,7 @@ try:
 except ModuleNotFoundError:
     from .pc_drift import PromptEmbeddings
 from models import PipelineWrapper
+import torchaudio
 
 
 def load_image(image_path: str, left: int = 0, right: int = 0, top: int = 0, bottom: int = 0,
@@ -29,7 +30,7 @@ def load_image(image_path: str, left: int = 0, right: int = 0, top: int = 0, bot
     bottom = min(bottom, h - top - 1)
     image = image[top: h-bottom, left:w-right]
     h, w, c = image.shape
-    
+
     if h < w:
         offset = (w - h) // 2
         image = image[:, offset:offset + h]
@@ -40,34 +41,61 @@ def load_image(image_path: str, left: int = 0, right: int = 0, top: int = 0, bot
     image = T.functional.to_tensor(image).unsqueeze(0).to(device)
     image = image * 2 - 1
     # image = torch.from_numpy(image).float() / 127.5 - 1
-    # image = image.permute(2, 0, 1).unsqueeze(0).to(device) 
+    # image = image.permute(2, 0, 1).unsqueeze(0).to(device)
 
     return image
 
 
-def load_audio(audio_path: str, fn_STFT, left: int = 0, right: int = 0, device: Optional[torch.device] = None
-               ) -> torch.tensor:
-    if type(audio_path) is str:
-        import audioldm
-        import audioldm.audio
+def get_spec(wav: torch.Tensor, fn_STFT: torch.nn.Module) -> torch.Tensor:
+    return fn_STFT.mel_spectrogram(torch.clip(wav[:, 0], -1, 1).cpu())[0]
 
-        duration = audioldm.utils.get_duration(audio_path)
 
-        mel, _, _ = audioldm.audio.wav_to_fbank(audio_path, target_length=int(duration * 102.4), fn_STFT=fn_STFT)
-        mel = mel.unsqueeze(0)
+def load_audio(audio_path: str, fn_STFT, left: int = 0, right: int = 0, device: Optional[torch.device] = None,
+               return_wav: bool = False, stft: bool = False, model_sr: Optional[int] = None) -> torch.Tensor:
+    if stft:  # AudioLDM/tango loading to spectrogram
+        if type(audio_path) is str:
+            import audioldm
+            import audioldm.audio
+
+            duration = audioldm.utils.get_duration(audio_path)
+
+            mel, _, wav = audioldm.audio.wav_to_fbank(audio_path, target_length=int(duration * 102.4), fn_STFT=fn_STFT)
+            mel = mel.unsqueeze(0)
+        else:
+            mel = audio_path
+
+        c, h, w = mel.shape
+        left = min(left, w-1)
+        right = min(right, w - left - 1)
+        mel = mel[:, :, left:w-right]
+        mel = mel.unsqueeze(0).to(device)
+
+        if return_wav:
+            return mel, 16000, duration, wav
+
+        return mel, model_sr, duration
     else:
-        mel = audio_path
+        waveform, sr = torchaudio.load(audio_path)
+        if sr != model_sr:
+            waveform = torchaudio.functional.resample(waveform, orig_freq=sr, new_freq=model_sr)
+        # waveform = waveform.numpy()[0, ...]
 
-    c, h, w = mel.shape
-    left = min(left, w-1)
-    right = min(right, w - left - 1)
-    mel = mel[:, :, left:w-right]
-    mel = mel.unsqueeze(0).to(device)
+        def normalize_wav(waveform):
+            waveform = waveform - torch.mean(waveform)
+            waveform = waveform / (torch.max(torch.abs(waveform)) + 1e-8)
+            return waveform * 0.5
 
-    return mel
+        waveform = normalize_wav(waveform)
+        # waveform = waveform[None, ...]
+        # waveform = pad_wav(waveform, segment_length)
+
+        # waveform = waveform[0, ...]
+        waveform = torch.FloatTensor(waveform)
+        duration = waveform.shape[-1] / model_sr
+        return waveform, model_sr, duration
 
 
-def set_reproducability(seed: int, extreme: bool = True):
+def set_reproducability(seed: int, extreme: bool = True) -> None:
     if seed is not None:
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
@@ -85,6 +113,7 @@ def set_reproducability(seed: int, extreme: bool = True):
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
+    torch.set_float32_matmul_precision("high")
 
 
 def get_height_of_spectrogram(length: int, ldm_stable: PipelineWrapper) -> int:

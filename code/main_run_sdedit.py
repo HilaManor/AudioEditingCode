@@ -27,7 +27,8 @@ if __name__ == "__main__":
                         default="cvssp/audioldm2-music", help='Audio diffusion model to use')
 
     parser.add_argument("--init_aud", type=str, required=True, help='Audio to invert and extract PCs from')
-    parser.add_argument("--cfg_tar", type=float, default=12, help='Classifier-free guidance strength for reverse process')
+    parser.add_argument("--cfg_tar", type=float, default=12,
+                        help='Classifier-free guidance strength for reverse process')
     parser.add_argument("--num_diffusion_steps", type=int, default=200,
                         help="Number of diffusion steps. TANGO and AudioLDM2 are recommended to be used with 200 steps"
                              ", while AudioLDM is recommeneded to be used with 100 steps")

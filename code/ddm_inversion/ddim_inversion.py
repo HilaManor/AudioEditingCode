@@ -9,7 +9,6 @@ from utils import get_text_embeddings
 
 def next_step(ldm_model, model_output: Union[torch.FloatTensor, np.ndarray],
               timestep: int, sample: Union[torch.FloatTensor, np.ndarray]):
-    # timestep, next_timestep = min(timestep - ldm_model.model.scheduler.config.num_train_timesteps
     timestep, next_timestep = min(timestep - ldm_model.model.scheduler.config.num_train_timesteps
                                   // ldm_model.model.scheduler.num_inference_steps, 999), timestep
     alpha_prod_t = ldm_model.model.scheduler.alphas_cumprod[timestep] if timestep >= 0 else ldm_model.model.scheduler.final_alpha_cumprod
@@ -38,17 +37,12 @@ def get_noise_pred(ldm_model, latent, t, text_emb, uncond_emb, cfg_scale):
             encoder_attention_mask=text_emb.boolean_prompt_mask,
         )
 
-    # noise_pred = ldm_model.unet_forward(latents_input, timestep=t, encoder_hidden_states=context).sample  #["sample"]
-    # noise_pred_unconldm_d, noise_prediction_text = noise_pred.chunk(2)
     noise_pred = noise_pred_uncond.sample + cfg_scale * (noise_prediction_text.sample - noise_pred_uncond.sample)
-    # latents = next_step(model, noise_pred, t, latent)
     return noise_pred
 
 
 @torch.no_grad()
 def ddim_inversion(ldm_model, w0, prompts, cfg_scale, num_inference_steps, skip):
-    # uncond_embeddings, cond_embeddings = self.context.chunk(2)
-    # all_latent = [latent]
 
     _, text_emb, uncond_emb = get_text_embeddings(prompts, [""], ldm_model)
 
@@ -59,7 +53,6 @@ def ddim_inversion(ldm_model, w0, prompts, cfg_scale, num_inference_steps, skip)
         t = ldm_model.model.scheduler.timesteps[len(ldm_model.model.scheduler.timesteps) - i - 1]
         noise_pred = get_noise_pred(ldm_model, latent, t, text_emb, uncond_emb, cfg_scale)
         latent = next_step(ldm_model, noise_pred, t, latent)
-        # all_latent.append(latent)
     return latent
 
 

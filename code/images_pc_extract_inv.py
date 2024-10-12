@@ -1,12 +1,10 @@
 import argparse
 import calendar
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import time
 import torch
 from torch import inference_mode
-import torchaudio
 from tqdm import tqdm
 import wandb
 from ddm_inversion.inversion_utils import inversion_forward_process
@@ -14,7 +12,6 @@ from models import load_model
 from pc_drift import forward_directional, PCStreamChoice, get_eigenvectors
 from utils import plot_corrs, set_reproducability, get_text_embeddings, load_image
 import torchvision.transforms as T
-from PIL import Image
 
 
 if __name__ == "__main__":
@@ -30,11 +27,13 @@ if __name__ == "__main__":
     parser.add_argument("--num_diffusion_steps", type=int, default=100,
                         help='Number of diffusion steps. StableDiffusino is recommeneded to be used with 100 steps.')
     parser.add_argument("--source_prompt", type=str, nargs='+', default=[""],
-                        help='Prompt to accompany the inversion and generation process. Should describe the original image.')
+                        help='Prompt to accompany the inversion and generation process. '
+                             'Should describe the original image.')
     parser.add_argument("--target_neg_prompt", type=str, nargs='+', default=[""],
                         help='Negative prompt to accompany the inversion and generation process.')  # ["low quality"])
 
-    parser.add_argument("--corr_to_swap", type=float, default=0.8, help='Correlation threshold to swap eigenvector sign')
+    parser.add_argument("--corr_to_swap", type=float, default=0.8,
+                        help='Correlation threshold to swap eigenvector sign')
     parser.add_argument("--drift_start", type=int, default=None,
                         help='Timestep to start extracting PCs from. If not specified, will use the first timestep.')
     parser.add_argument("--drift_end", type=int, default=None,
@@ -61,7 +60,6 @@ if __name__ == "__main__":
     args.eta = 1.
     args.numerical_fix = True
     args.double_precision = False
-    args.x_prev_mode = False
     args.test_rand_gen = False
 
     set_reproducability(args.seed)
@@ -126,13 +124,12 @@ if __name__ == "__main__":
     #     ))
 
     # find Zs and wts - forward process
-    _, zs, wts = inversion_forward_process(ldm_stable, w0, etas=args.eta,
-                                           prompts=args.source_prompt, cfg_scales=[args.cfg_tar],
-                                           prog_bar=True,
-                                           num_inference_steps=args.num_diffusion_steps,
-                                           # cutoff_points=args.cutoff_points,
-                                           numerical_fix=args.numerical_fix,
-                                           x_prev_mode=args.x_prev_mode)
+    _, zs, wts, _ = inversion_forward_process(ldm_stable, w0, etas=args.eta,
+                                              prompts=args.source_prompt, cfg_scales=[args.cfg_tar],
+                                              prog_bar=True,
+                                              num_inference_steps=args.num_diffusion_steps,
+                                              # cutoff_points=args.cutoff_points,
+                                              numerical_fix=args.numerical_fix)
 
     wts = wts.flip(0)
     latents = [wts[0].unsqueeze(0), *[z.unsqueeze(0) for z in zs.flip(0)]]
@@ -207,7 +204,7 @@ if __name__ == "__main__":
                 for ev_num in range(args.n_evs):
                     if corr[ev_num] <= -args.corr_to_swap:
                         eigvecs[ev_num] *= -1
-                        print(f'swapped eigvec {ev_num +1}!')
+                        print(f'swapped eigvec {ev_num + 1}!')
                         # eigval *= -1 # TODO WHat happens to eigval
                         corr[ev_num] *= -1
                 corrs.append(corr)
@@ -266,7 +263,7 @@ if __name__ == "__main__":
     x0_dec = x0_dec.clamp(-1, 1)
 
     with torch.no_grad():
-        x0_dec  = (x0_dec + 1) / 2
+        x0_dec = (x0_dec + 1) / 2
         x0 = (x0 + 1) / 2
         image = T.functional.to_pil_image(x0_dec[0].cpu().detach())
         orig_image = T.functional.to_pil_image(x0[0].cpu().detach())
