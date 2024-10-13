@@ -144,7 +144,8 @@ If you use this code or the MedleyMDPrompts dataset for your research, please ci
 
 Parts of this code are heavily based on [DDPM Inversion](https://github.com/inbarhub/DDPM_inversion) and on [Gaussian Denoising Posterior](https://github.com/HilaManor/GaussianDenoisingPosterior).
 
-AudioLDM2 is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa]. Therefore, using the weights of AudioLDM2 (the default) and code originating in the `code/audioldm` folder is under the same license (eg., `utils.py:load_audio` uses code from `code/audioldm`).  
+AudioLDM2 is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa]. Therefore, using the weights of AudioLDM2 (the default) and code originating in the `code/audioldm` folder is under the same license.  
+The weights of StableAudioOpen are licensed under Stability AI's Community License.  
 The rest of the code (inversion, PCs computation) is licensed under an MIT license.
 
 [![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
