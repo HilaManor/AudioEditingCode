@@ -216,8 +216,6 @@ class PipelineWrapper(torch.nn.Module):
         # 1. time
         timesteps = timestep
         if not torch.is_tensor(timesteps):
-            # TODO: this requires sync between CPU and GPU. So try to pass timesteps as tensors if you can
-            # This would be a good case for the `match` statement (Python 3.10+)
             is_mps = sample.device.type == "mps"
             if isinstance(timestep, float):
                 dtype = torch.float32 if is_mps else torch.float64
@@ -439,7 +437,6 @@ class TangoWrapper(PipelineWrapper):
         return self.stft
 
     def vae_encode(self, x: torch.Tensor) -> torch.Tensor:
-        # TODO Accelerator
         # unwrapped_vae = accelerator.unwrap_model(vae)
         if x.shape[2] % 4:
             x = torch.nn.functional.pad(x, (0, 0, 4 - (x.shape[2] % 4), 0))
@@ -760,8 +757,6 @@ class AudioLDM2Wrapper(PipelineWrapper):
         # 1. time
         timesteps = timestep
         if not torch.is_tensor(timesteps):
-            # TODO: this requires sync between CPU and GPU. So try to pass timesteps as tensors if you can
-            # This would be a good case for the `match` statement (Python 3.10+)
             is_mps = sample.device.type == "mps"
             if isinstance(timestep, float):
                 dtype = torch.float32 if is_mps else torch.float64
@@ -985,7 +980,7 @@ class StableDiffWrapper(PipelineWrapper):
                                    mid_block_additional_residual=mid_block_additional_residual,
                                    encoder_attention_mask=encoder_attention_mask)
         if not return_dict:
-            return unet_out  # TODO no error here?
+            return (unet_out.sample,)
 
         return unet_out, None, None
 
@@ -1048,7 +1043,7 @@ class CelebAHQWrapper(PipelineWrapper):
         unet_out = self.model.unet(sample, timestep, None)
 
         if not return_dict:
-            return unet_out  # TODO no error here?
+            return (unet_out.sample,)
 
         return unet_out, None, None
 
@@ -1094,13 +1089,12 @@ class StableAudWrapper(PipelineWrapper):
         prompt_embeds = self.model.projection_model(text_hidden_states=prompt_embeds).text_hidden_states
 
         if attention_mask is None:
-            # TODO VERIFY
+            raise NotImplementedError("Shouldn't reach here. Please raise an issue if you do.")
             """prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds])
-                if attention_mask is not None and negative_attention_mask is None:
-                    negative_attention_mask = torch.ones_like(attention_mask)
-                elif attention_mask is None and negative_attention_mask is not None:
-                    attention_mask = torch.ones_like(negative_attention_mask)"""
-            raise NotImplementedError("TODO")
+            if attention_mask is not None and negative_attention_mask is None:
+                negative_attention_mask = torch.ones_like(attention_mask)
+            elif attention_mask is None and negative_attention_mask is not None:
+                attention_mask = torch.ones_like(negative_attention_mask)"""
 
         if prompts == [""]:  # empty
             return torch.zeros_like(prompt_embeds, device=prompt_embeds.device), None, None
@@ -1267,7 +1261,7 @@ class StableAudWrapper(PipelineWrapper):
             elif solver_order == 2 or self.model.scheduler.lower_order_nums < 2 or lower_order_second:
                 xtm1 = self.model.scheduler.multistep_dpm_solver_second_order_update(
                     self.model.scheduler.model_outputs, sample=xt, noise=z)
-            # TODO fix self.model.scheduler.model_outputs as well?
+            # If not perfect recon - maybe TODO fix self.model.scheduler.model_outputs as well?
 
         if self.model.scheduler.lower_order_nums < solver_order:
             self.model.scheduler.lower_order_nums += 1
@@ -1352,11 +1346,10 @@ class StableAudWrapper(PipelineWrapper):
                                             timestep.unsqueeze(0),
                                             encoder_hidden_states=embeds,
                                             global_hidden_states=self.audio_duration_embeds,
-                                            rotary_embedding=self.rotary_embedding,
-                                            return_dict=return_dict)
+                                            rotary_embedding=self.rotary_embedding)
 
         if not return_dict:
-            return noise_pred.sample, None, None  # TODO no error here?
+            return (noise_pred.sample,)
 
         return noise_pred, None, None
 
